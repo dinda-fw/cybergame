@@ -1,4 +1,4 @@
-# 🛡️ CyberShield Academy
+# 🛡️ CyberShield Game
 
 **CyberShield Academy** adalah sebuah media pembelajaran interaktif (game edukasi) berbasis web yang dirancang khusus untuk membantu siswa dan pemula memahami dasar-dasar keamanan siber (*cybersecurity*). Melalui game berlatar belakang simulasi kasus siber di sekolah ini, pengguna dapat belajar mengidentifikasi ancaman keamanan digital sehari-hari secara menyenangkan dan aplikatif.
 
@@ -53,7 +53,7 @@ Proyek ini dibangun menggunakan teknologi modern pada ekosistem web:
 *   **CSS Vanilla / Custom Styles**: Digunakan untuk merancang UI bertema *cyberpunk/glassmorphism* modern dengan transisi dan efek visual premium tanpa ketergantungan framework CSS pihak ketiga.
 *   **Lucide React**: Toolkit ikon SVG bersih, responsif, dan konsisten.
 *   **HTML5 Semantic**: Struktur dasar halaman web yang ramah SEO dan aksesibilitas.
-*   **Web Storage API (Local Storage)**: Menyimpan sesi login, status game, progres misi, serta data leaderboard pemain secara lokal di browser.
+*   **Web Storage API**: Menyimpan sesi login, status game, progres misi, serta data leaderboard pemain secara lokal di browser.
 
 ---
 
