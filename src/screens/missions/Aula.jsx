@@ -64,7 +64,7 @@ const Aula = ({ navigate, completeMission, addXP, recordMistake, username }) => 
 
     if (isSafeFlagged) {
       setStatus('success');
-      completeMission('mission_aula', 100);
+      completeMission('mission_aula', 0);
     } else {
       setStatus('fail');
       addXP(-50);
@@ -88,10 +88,10 @@ const Aula = ({ navigate, completeMission, addXP, recordMistake, username }) => 
         <h3 className="font-bold text-center mt-2 text-glow-neon">Misi: Hindari Penipuan Pesan</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '10px' }}>
           <div style={{ background: 'rgba(255, 165, 0, 0.1)', borderLeft: '3px solid #F59E0B', padding: '10px', borderRadius: '4px' }}>
-            <p style={{ margin: 0, fontSize: '0.85rem' }}><span style={{fontWeight: 'bold', color: '#F59E0B'}}>Studi Kasus:</span> Gawat! Sistem sekolah kita hari ini resmi menjadi target operasi penipuan massal oleh sindikat peretas misterius. Mereka sengaja mengirimkan berbagai pesan acak secara serentak ke ponsel semua orang di sekolah untuk mengacaukan situasi sekolah.</p>
+            <p style={{ margin: 0, fontSize: '1.1rem' }}><span style={{fontWeight: 'bold', color: '#F59E0B'}}>Studi Kasus:</span> Hari ini ponsel seluruh warga sekolah mendadak dibanjiri berbagai pesan acak dari hacker, Pesan-pesan ini sengaja memanfaatkan rasa panik atau umpan hadiah gratis agar kamu tergiur dan langsung mengklik tautan tanpa berpikir panjang. Yuk, bantu amankan sekolah dengan mendeteksi modus penipuan massal ini sebelum ada korban lainya.</p>
           </div>
           <div style={{ background: 'rgba(0, 240, 255, 0.1)', borderLeft: '3px solid var(--primary-color)', padding: '10px', borderRadius: '4px' }}>
-            <p style={{ margin: 0, fontSize: '0.85rem', fontWeight: 'bold' }}>{scenario.instruction}</p>
+            <p style={{ margin: 0, fontSize: '1.1rem', fontWeight: 'bold' }}>{scenario.instruction}</p>
           </div>
         </div>
         
@@ -103,19 +103,19 @@ const Aula = ({ navigate, completeMission, addXP, recordMistake, username }) => 
             </div>
             <div>
               <p className="font-bold" style={{ margin: 0, fontSize: '1rem' }}>{scenario.sender}</p>
-              <p style={{ margin: 0, fontSize: '0.75rem', opacity: 0.8 }}>Online</p>
+              <p style={{ margin: 0, fontSize: '1rem', opacity: 0.8 }}>Online</p>
             </div>
           </div>
           
           {/* Chat Body */}
           <div style={{ padding: '15px', flexGrow: 1, display: 'flex', flexDirection: 'column', gap: '10px' }}>
             <div style={{ alignSelf: 'flex-start', background: '#202c33', color: '#e9edef', padding: '10px 15px', borderRadius: '0 12px 12px 12px', maxWidth: '85%', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
-              <p style={{ margin: 0, fontSize: '0.9rem' }}>{renderTextWithLinks(scenario.message)}</p>
+              <p style={{ margin: 0, fontSize: '1.15rem' }}>{renderTextWithLinks(scenario.message)}</p>
             </div>
 
             {status === 'playing' && (
               <div className="flex-column animate-fade-in" style={{ gap: '0.5rem', marginTop: 'auto' }}>
-                <p className="text-center font-bold" style={{ color: 'var(--primary-color)', fontSize: '0.8rem', background: 'rgba(255,255,255,0.05)', padding: '5px', borderRadius: '8px' }}>
+                <p className="text-center font-bold" style={{ color: 'var(--primary-color)', fontSize: '1.05rem', background: 'rgba(255,255,255,0.05)', padding: '5px', borderRadius: '8px' }}>
                   Pilih balasan yang paling aman:
                 </p>
                 {scenario.options.map((opt, i) => (
@@ -133,20 +133,20 @@ const Aula = ({ navigate, completeMission, addXP, recordMistake, username }) => 
 
             {status === 'success' && (
               <div style={{ alignSelf: 'flex-end', background: '#005c4b', color: '#e9edef', padding: '10px 15px', borderRadius: '12px 0 12px 12px', maxWidth: '85%', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
-                <p style={{ margin: 0, fontSize: '0.9rem' }}>*Nomor ini telah diblokir dan dilaporkan*</p>
+                <p style={{ margin: 0, fontSize: '1.15rem' }}>*Nomor ini telah diblokir dan dilaporkan*</p>
               </div>
             )}
 
             {status === 'fail' && (
               <div style={{ alignSelf: 'flex-end', background: '#005c4b', color: '#e9edef', padding: '10px 15px', borderRadius: '12px 0 12px 12px', maxWidth: '85%', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
-                <p style={{ margin: 0, fontSize: '0.9rem' }}>*Pesan Terkirim*</p>
+                <p style={{ margin: 0, fontSize: '1.15rem' }}>*Pesan Terkirim*</p>
               </div>
             )}
           </div>
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '0.5rem' }}>
-           <button className="btn flex-row" style={{ background: 'var(--primary-color)', color: 'white', borderRadius: '8px', padding: '8px 16px', fontSize: '0.9rem', width: '100%', justifyContent: 'center' }} onClick={() => navigate('url_detective', { backTo: 'mission_aula' })}>
+           <button className="btn flex-row" style={{ background: 'var(--primary-color)', color: 'white', borderRadius: '8px', padding: '8px 16px', fontSize: '1.15rem', width: '100%', justifyContent: 'center' }} onClick={() => navigate('url_detective', { backTo: 'mission_aula' })}>
               <Search size={18} style={{ marginRight: '8px' }}/> Cek Link di Alat Pemeriksa
            </button>
         </div>
@@ -154,7 +154,7 @@ const Aula = ({ navigate, completeMission, addXP, recordMistake, username }) => 
         {status === 'success' && (
           <div className="cyber-card flex-column text-center animate-fade-in mt-2" style={{ borderColor: 'var(--success-green)', gap: '0.5rem', padding: '1rem' }}>
             <h3 className="text-success font-bold">Pintar Sekali!</h3>
-            <p style={{ fontSize: '0.85rem' }}>{scenario.explanation}</p>
+            <p style={{ fontSize: '1.1rem' }}>{scenario.explanation}</p>
             <p className="font-bold text-success">+100 XP</p>
             <button className="btn cyber-btn mt-2" onClick={() => navigate('schoolMap')}>Kembali ke Peta</button>
           </div>
@@ -163,7 +163,7 @@ const Aula = ({ navigate, completeMission, addXP, recordMistake, username }) => 
         {status === 'fail' && (
           <div className="cyber-card flex-column text-center animate-fade-in mt-2" style={{ borderColor: 'var(--danger-red)', gap: '0.5rem', padding: '1rem' }}>
             <h3 className="text-danger font-bold">Yah, Anda Tertipu!</h3>
-            <p style={{ fontSize: '0.85rem' }}>{scenario.failMessage}</p>
+            <p style={{ fontSize: '1.1rem' }}>{scenario.failMessage}</p>
             <p className="font-bold text-danger">-50 XP</p>
             <button className="btn btn-outline mt-2" onClick={() => navigate('schoolMap')}>Lanjut ke Map</button>
           </div>
@@ -172,7 +172,7 @@ const Aula = ({ navigate, completeMission, addXP, recordMistake, username }) => 
         {status === 'timeUp' && (
           <div className="cyber-card flex-column text-center animate-fade-in mt-2" style={{ borderColor: 'var(--warning-yellow)', gap: '0.5rem', padding: '1rem' }}>
             <h3 className="text-warning font-bold">Waktu Habis!</h3>
-            <p style={{ fontSize: '0.85rem' }}>Anda terlalu lama mengambil tindakan!</p>
+            <p style={{ fontSize: '1.1rem' }}>Anda terlalu lama mengambil tindakan!</p>
             <button className="btn cyber-btn mt-2" onClick={handleRetry}>Coba Lagi</button>
             <button className="btn btn-outline mt-2" onClick={() => navigate('schoolMap')}>Kembali ke Peta</button>
           </div>

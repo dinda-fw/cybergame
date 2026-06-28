@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { User, RefreshCcw } from 'lucide-react';
+import { User, RefreshCcw, GraduationCap } from 'lucide-react';
 
 const Login = ({ onLogin }) => {
   const [username, setUsername] = useState('');
+  const [className, setClassName] = useState('');
   const [error, setError] = useState('');
   const [isNotRobot, setIsNotRobot] = useState(false);
 
@@ -15,12 +16,17 @@ const Login = ({ onLogin }) => {
       return;
     }
 
+    if (!className.trim()) {
+      setError('Harap masukkan kelasmu!');
+      return;
+    }
+
     if (!isNotRobot) {
       setError('Harap centang verifikasi "Saya bukan robot"!');
       return;
     }
 
-    onLogin(username.trim());
+    onLogin(username.trim(), className.trim());
   };
 
   return (
@@ -28,7 +34,7 @@ const Login = ({ onLogin }) => {
       <div className="cyber-card flex-column w-full" style={{ maxWidth: '400px', alignItems: 'center' }}>
         <img src="/icon5.png" alt="CyberShield Logo" style={{ width: 80, height: 80, marginBottom: '16px' }} />
         <h1 className="text-glow" style={{ fontSize: '2.2rem', margin: 0, textAlign: 'center', letterSpacing: '2px' }}>
-          CYBERGAME
+          CYBERSHIELD GAME
         </h1>
         <p className="text-muted text-center" style={{ marginBottom: '24px' }}>
           Masukkan nama panggilanmu untuk mulai bermain dan bersaing di Papan Peringkat!
@@ -46,10 +52,22 @@ const Login = ({ onLogin }) => {
             <input 
               type="text" 
               className="cyber-input w-full" 
-              placeholder="Nama Panggilan / Nickname" 
+              placeholder="Nama" 
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              style={{ padding: '16px 16px 16px 44px', boxSizing: 'border-box', fontSize: '1.1rem', borderRadius: '8px' }}
+              style={{ padding: '16px 16px 16px 44px', boxSizing: 'border-box', fontSize: '1.1rem', borderRadius: '8px', border: '1px solid var(--border-blue)', background: 'rgba(255, 255, 255, 0.05)', color: 'white' }}
+            />
+          </div>
+
+          <div style={{ position: 'relative' }}>
+            <GraduationCap size={20} color="var(--text-muted)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+            <input 
+              type="text" 
+              className="cyber-input w-full" 
+              placeholder="Kelas (contoh: 11 TKJ 1)" 
+              value={className}
+              onChange={(e) => setClassName(e.target.value)}
+              style={{ padding: '16px 16px 16px 44px', boxSizing: 'border-box', fontSize: '1.1rem', borderRadius: '8px', border: '1px solid var(--border-blue)', background: 'rgba(255, 255, 255, 0.05)', color: 'white' }}
             />
           </div>
 

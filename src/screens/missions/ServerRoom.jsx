@@ -31,7 +31,7 @@ const ServerRoom = ({ navigate, completeMission, addXP, recordMistake, username 
     const shuffled = deterministicShuffle(username, questionBank.serverRoom).slice(0, 8);
     const initialUrls = shuffled.map(q => ({ ...q, zone: 'unassigned' }));
     setUrls(initialUrls);
-    setTimeLeft(60);
+    setTimeLeft(120);
     setStatus('playing');
   }, [username]);
 
@@ -80,7 +80,7 @@ const ServerRoom = ({ navigate, completeMission, addXP, recordMistake, username 
     setTimeout(() => {
       if (correct) {
         setStatus('success');
-        completeMission('mission_serverroom', 150);
+        completeMission('mission_serverroom', 0);
       } else {
         setStatus('fail');
         addXP(-50);
@@ -91,7 +91,7 @@ const ServerRoom = ({ navigate, completeMission, addXP, recordMistake, username 
   };
 
   const handleRetry = () => {
-    setTimeLeft(60);
+    setTimeLeft(120);
     const shuffled = deterministicShuffle(username, questionBank.serverRoom).slice(0, 8);
     const initialUrls = shuffled.map(q => ({ ...q, zone: 'unassigned' }));
     setUrls(initialUrls);
@@ -111,11 +111,11 @@ const ServerRoom = ({ navigate, completeMission, addXP, recordMistake, username 
       <div className="content-area flex-column" style={{ padding: '0.5rem', gap: '0.5rem' }}>
         <h3 className="font-bold text-center mt-2 text-glow-neon">Misi: Penjaga Gerbang Server</h3>
         <div style={{ background: 'rgba(0, 240, 255, 0.1)', borderLeft: '3px solid var(--primary-color)', padding: '10px', borderRadius: '4px', marginBottom: '0.5rem' }}>
-          <p style={{ margin: 0, fontSize: '0.85rem', fontWeight: 'bold' }}>Tugas: Analisis setiap URL di bawah ini. Tarik (drag & drop) URL yang menurutmu aman ke "Zona Aman", dan URL phishing/berbahaya ke "Zona Bahaya".</p>
+          <p style={{ margin: 0, fontSize: '1.1rem', fontWeight: 'bold' }}>Tugas: Analisis setiap URL di bawah ini. Tarik (drag & drop) URL yang menurutmu aman ke "Zona Aman", dan URL phishing/berbahaya ke "Zona Bahaya".</p>
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}>
-           <button className="btn flex-row" style={{ background: 'var(--primary-color)', color: 'white', borderRadius: '8px', padding: '6px 12px', fontSize: '0.85rem', width: '100%', justifyContent: 'center' }} onClick={() => navigate('url_detective', { backTo: 'mission_serverroom' })}>
+           <button className="btn flex-row" style={{ background: 'var(--primary-color)', color: 'white', borderRadius: '8px', padding: '6px 12px', fontSize: '1.1rem', width: '100%', justifyContent: 'center' }} onClick={() => navigate('url_detective', { backTo: 'mission_serverroom' })}>
               <Search size={16} style={{ marginRight: '8px' }}/> Cek Web yang Mencurigakan
            </button>
         </div>
@@ -126,13 +126,13 @@ const ServerRoom = ({ navigate, completeMission, addXP, recordMistake, username 
           onDragOver={handleDragOver}
           onDrop={(e) => handleDrop(e, 'unassigned')}
         >
-          {unassignedUrls.length === 0 && <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Semua alamat web sudah dimasukkan</span>}
+          {unassignedUrls.length === 0 && <span style={{ fontSize: '1.05rem', color: 'var(--text-muted)' }}>Semua alamat web sudah dimasukkan</span>}
           {unassignedUrls.map(u => (
             <div
               key={u.id}
               draggable={status === 'playing'}
               onDragStart={(e) => handleDragStart(e, u.id)}
-              style={{ padding: '6px 12px', background: 'white', color: '#0f172a', borderRadius: '20px', fontSize: '0.8rem', cursor: status === 'playing' ? 'grab' : 'default', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
+              style={{ padding: '6px 12px', background: 'white', color: '#0f172a', borderRadius: '20px', fontSize: '1.05rem', cursor: status === 'playing' ? 'grab' : 'default', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
             >
               {u.url}
             </div>
@@ -162,7 +162,7 @@ const ServerRoom = ({ navigate, completeMission, addXP, recordMistake, username 
                   textColor = u.type === 'danger' ? '#991b1b' : '#166534';
                 }
                 return (
-                  <div key={u.id} draggable={status === 'playing'} onDragStart={(e) => handleDragStart(e, u.id)} style={{ padding: '6px', background: bgColor, color: textColor, borderRadius: '8px', fontSize: '0.75rem', textAlign: 'center', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
+                  <div key={u.id} draggable={status === 'playing'} onDragStart={(e) => handleDragStart(e, u.id)} style={{ padding: '6px', background: bgColor, color: textColor, borderRadius: '8px', fontSize: '1rem', textAlign: 'center', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
                     {u.url}
                   </div>
                 );
@@ -190,7 +190,7 @@ const ServerRoom = ({ navigate, completeMission, addXP, recordMistake, username 
                   textColor = u.type === 'danger' ? '#991b1b' : '#166534';
                 }
                 return (
-                  <div key={u.id} draggable={status === 'playing'} onDragStart={(e) => handleDragStart(e, u.id)} style={{ padding: '6px', background: bgColor, color: textColor, borderRadius: '8px', fontSize: '0.75rem', textAlign: 'center', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
+                  <div key={u.id} draggable={status === 'playing'} onDragStart={(e) => handleDragStart(e, u.id)} style={{ padding: '6px', background: bgColor, color: textColor, borderRadius: '8px', fontSize: '1rem', textAlign: 'center', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
                     {u.url}
                   </div>
                 );
@@ -220,8 +220,8 @@ const ServerRoom = ({ navigate, completeMission, addXP, recordMistake, username 
         {status === 'success' && (
           <div className="glass-card flex-column text-center animate-fade-in mt-2" style={{ borderColor: 'var(--success-green)', gap: '0.5rem', padding: '1rem' }}>
             <h3 className="text-success font-bold">Server Berhasil Dijaga!</h3>
-            <p style={{ fontSize: '0.85rem' }}>Pintar sekali! Semua web palsu berhasil diblokir.</p>
-            <div style={{ fontSize: '0.8rem', background: 'rgba(255,255,255,0.1)', padding: '8px', borderRadius: '8px', textAlign: 'left', marginTop: '4px' }}>
+            <p style={{ fontSize: '1.1rem' }}>Pintar sekali! Semua web palsu berhasil diblokir.</p>
+            <div style={{ fontSize: '1.05rem', background: 'rgba(255,255,255,0.1)', padding: '8px', borderRadius: '8px', textAlign: 'left', marginTop: '4px' }}>
               <strong>Keterangan hasil:</strong><br/>
               <span style={{ color: '#ef4444' }}>■ Merah</span> = Link Berbahaya (Phishing/Penipuan)<br/>
               <span style={{ color: '#10b981' }}>■ Hijau</span> = Link Aman
@@ -234,8 +234,8 @@ const ServerRoom = ({ navigate, completeMission, addXP, recordMistake, username 
         {status === 'fail' && (
           <div className="glass-card flex-column text-center animate-fade-in mt-2" style={{ borderColor: 'var(--danger-red)', gap: '0.5rem', padding: '1rem' }}>
             <h3 className="text-danger font-bold">Wah, ada yang salah!</h3>
-            <p style={{ fontSize: '0.85rem' }}>Ada web yang salah tempat. Penipu berhasil masuk ke server sekolah!</p>
-            <div style={{ fontSize: '0.8rem', background: 'rgba(255,255,255,0.1)', padding: '8px', borderRadius: '8px', textAlign: 'left', marginTop: '4px' }}>
+            <p style={{ fontSize: '1.1rem' }}>Ada web yang salah tempat. Penipu berhasil masuk ke server sekolah!</p>
+            <div style={{ fontSize: '1.05rem', background: 'rgba(255,255,255,0.1)', padding: '8px', borderRadius: '8px', textAlign: 'left', marginTop: '4px' }}>
               <strong>Keterangan hasil:</strong><br/>
               <span style={{ color: '#ef4444' }}>■ Merah</span> = Link Berbahaya (Phishing/Penipuan)<br/>
               <span style={{ color: '#10b981' }}>■ Hijau</span> = Link Aman
@@ -248,7 +248,7 @@ const ServerRoom = ({ navigate, completeMission, addXP, recordMistake, username 
         {status === 'timeUp' && (
           <div className="glass-card flex-column text-center animate-fade-in mt-2" style={{ borderColor: 'var(--warning-yellow)', gap: '0.5rem', padding: '1rem' }}>
             <h3 className="text-warning font-bold">Waktu Habis!</h3>
-            <p style={{ fontSize: '0.85rem' }}>Kamu kehabisan waktu! Peretas berhasil merusak sistem sekolah.</p>
+            <p style={{ fontSize: '1.1rem' }}>Kamu kehabisan waktu! Peretas berhasil masuk ke dalam server sistem sekolah.</p>
             <button className="btn cyber-btn mt-2" onClick={handleRetry}>Coba Lagi</button>
             <button className="btn btn-outline mt-2" onClick={() => navigate('schoolMap')}>Kembali ke Peta</button>
           </div>

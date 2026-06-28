@@ -8,7 +8,7 @@ const Dashboard = ({ navigate, gameState, onLogout, username, onReset, setLeader
     <div className="flex-column h-full">
       <div style={{ position: 'relative' }}>
         <Header
-          title="CyberShield Academy"
+          title="CyberShield Game"
           showBack={false}
           xp={gameState.xp}
           level={gameState.level}
@@ -18,7 +18,7 @@ const Dashboard = ({ navigate, gameState, onLogout, username, onReset, setLeader
                 onClick={() => { if (window.confirm('Yakin ingin reset progres?')) onReset(); }}
                 style={{ background: 'none', border: '1px solid var(--primary-color)', color: 'var(--primary-color)', borderRadius: '4px', padding: '4px 8px', fontSize: '0.8rem', cursor: 'pointer' }}
               >
-                Retake
+                Restart
               </button>
               <button
                 onClick={onLogout}
@@ -36,16 +36,31 @@ const Dashboard = ({ navigate, gameState, onLogout, username, onReset, setLeader
         {/* Cyberpunk Hero Section */}
         <div className="cyber-card mb-4 flex-column" style={{ position: 'relative', overflow: 'hidden', padding: 0 }}>
           <div style={{ position: 'relative', zIndex: 2, padding: '2rem' }}>
-            <h2 className="text-glow" style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>Selamat Datang {username}!</h2>
+            <h2 className="text-glow" style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>Hallo {username}!</h2>
             <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', maxWidth: '60%' }}>
               Suatu hari di sekolah, terdapat beberapa kejadian dan kasus aneh terkait serangan siber dan phishing. Mulailah petualanganmu sekarang untuk mengungkap semua kasus tersebut, dan lakukan tindakan terbaik demi melindungi keamanan sekolah kita!
             </p>
             <button
               className="cyber-btn"
-              onClick={() => navigate('schoolMap')}
+              onClick={() => {
+                if (gameState.completedMissions.length >= 5) {
+                  navigate('results');
+                } else {
+                  navigate('schoolMap');
+                }
+              }}
             >
-              <Map size={18} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }} />
-              Mulai Petualangan
+              {gameState.completedMissions.length >= 5 ? (
+                <>
+                  <Book size={18} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }} />
+                  Lihat Hasil Belajar
+                </>
+              ) : (
+                <>
+                  <Map size={18} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }} />
+                  {gameState.completedMissions.length > 0 ? 'Lanjutkan Misi' : 'Mulai Petualangan'}
+                </>
+              )}
             </button>
           </div>
           <div style={{
@@ -67,7 +82,7 @@ const Dashboard = ({ navigate, gameState, onLogout, username, onReset, setLeader
           <div className="cyber-card flex-column flex-center animate-fade-in" onClick={() => navigate('cyber_scan')} style={{ cursor: 'pointer', padding: '10px' }}>
             <Shield size={28} color="var(--primary-color)" className="mb-1" />
             <span className="font-semibold" style={{ color: 'var(--primary-color)', fontSize: '0.85rem' }}>Cyber Challenge</span>
-            <span className="text-muted" style={{ fontSize: '0.7rem' }}>Latihan Harian</span>
+            <span className="text-muted" style={{ fontSize: '0.7rem' }}>test speed</span>
           </div>
 
           <div className="cyber-card flex-column flex-center animate-fade-in" onClick={() => navigate('url_detective')} style={{ cursor: 'pointer', padding: '10px' }}>

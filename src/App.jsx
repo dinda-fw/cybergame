@@ -9,16 +9,15 @@ import Aula from './screens/missions/Aula';
 import ServerRoom from './screens/missions/ServerRoom';
 import UrlDetective from './screens/features/UrlDetective';
 import CyberScanChallenge from './screens/features/CyberScanChallenge';
-import BossBattle from './screens/features/BossBattle';
 import ResultsDashboard from './screens/ResultsDashboard';
 import Login from './screens/Login';
 import Leaderboard from './screens/Leaderboard';
 
 const DEFAULT_GAME_STATE = {
-  xp: 1500,
+  xp: 0,
   level: 'Cyber Rookie',
   badges: 3,
-  currentLevel: 1, // 1: Kantin, 2: Aula, 3: RuangGuru, 4: Lab, 5: Server, 6: Boss
+  currentLevel: 1, // 1: Kantin, 2: Aula, 3: RuangGuru, 4: Lab, 5: Server (Max 5)
   competencies: {
     awareness: 0,
     urlDetection: 0,
@@ -30,68 +29,101 @@ const DEFAULT_GAME_STATE = {
   mistakes: []
 };
 
+const API_URL = 'http://localhost:3001/api';
+
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [currentScreen, setCurrentScreen] = useState('dashboard');
   const [gameState, setGameState] = useState(DEFAULT_GAME_STATE);
   const [leaderboardBackTo, setLeaderboardBackTo] = useState('dashboard');
-  const [urlDetectiveBackTo, setUrlDetectiveBackTo] = useState('dashboard');
+  const [showUrlDetective, setShowUrlDetective] = useState(false);
 
-  const updateLeaderboard = (username, xp) => {
+  const saveProgressToBackend = async (stateToSave, usernameToSave) => {
     try {
-      const boardStr = localStorage.getItem('cyberLeaderboard');
-      let board = boardStr ? JSON.parse(boardStr) : [];
-      
-      const existingIdx = board.findIndex(item => item.username.toLowerCase() === username.toLowerCase());
-      if (existingIdx !== -1) {
-        board[existingIdx].xp = Math.max(board[existingIdx].xp, xp);
-      } else {
-        board.push({ username, xp });
-      }
-      
-      board.sort((a, b) => b.xp - a.xp);
-      localStorage.setItem('cyberLeaderboard', JSON.stringify(board));
+      await fetch(`${API_URL}/save-progress`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: usernameToSave,
+          ...stateToSave
+        })
+      });
     } catch (e) {
-      console.error(e);
+      console.error("Failed to save progress to backend", e);
     }
   };
 
-  // Initialize Auth State
   useEffect(() => {
-    const savedUser = localStorage.getItem('cyberShieldUser');
-    if (savedUser) {
-      setCurrentUser(savedUser);
-      const savedState = localStorage.getItem(`cyberShieldGameState_${savedUser}`);
-      if (savedState) {
-        setGameState(JSON.parse(savedState));
+    const checkLogin = async () => {
+      const savedUser = localStorage.getItem('cyberShieldUser');
+      if (savedUser) {
+        try {
+          const res = await fetch(`${API_URL}/user/${savedUser}`);
+          if (res.ok) {
+            const user = await res.json();
+            setCurrentUser(savedUser);
+            setGameState({
+              xp: user.xp,
+              level: user.level,
+              badges: user.badges,
+              currentLevel: user.currentLevel,
+              competencies: {
+                awareness: user.awareness,
+                urlDetection: user.urlDetection,
+                passwordSecurity: user.passwordSecurity,
+                socialEngineering: user.socialEngineering,
+                networkSecurity: user.networkSecurity
+              },
+              completedMissions: user.completedMissions || [],
+              mistakes: user.mistakes || []
+            });
+          }
+        } catch (e) {
+          console.error("Backend offline, relying on localstorage");
+        }
       }
-    }
+    };
+    checkLogin();
   }, []);
 
-  // Save Game State when it changes
-  useEffect(() => {
-    if (currentUser) {
-      localStorage.setItem(`cyberShieldGameState_${currentUser}`, JSON.stringify(gameState));
+  const handleLogin = async (username, className) => {
+    try {
+      const res = await fetch(`${API_URL}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, className })
+      });
+      const data = await res.json();
+      
+      if (res.ok) {
+        setCurrentUser(username);
+        localStorage.setItem('cyberShieldUser', username);
+        
+        const user = data.user;
+        const finalState = {
+          xp: user.xp,
+          level: user.level,
+          badges: user.badges,
+          currentLevel: user.currentLevel,
+          competencies: {
+            awareness: user.awareness,
+            urlDetection: user.urlDetection,
+            passwordSecurity: user.passwordSecurity,
+            socialEngineering: user.socialEngineering,
+            networkSecurity: user.networkSecurity
+          },
+          completedMissions: user.completedMissions || [],
+          mistakes: user.mistakes || []
+        };
+        
+        setGameState(finalState);
+        setCurrentScreen('dashboard');
+        return true;
+      }
+    } catch (e) {
+      alert("Gagal terhubung ke server database. Pastikan server berjalan (npm run dev).");
     }
-  }, [gameState, currentUser]);
-
-  const handleLogin = (username) => {
-    setCurrentUser(username);
-    localStorage.setItem('cyberShieldUser', username);
-    
-    const savedState = localStorage.getItem(`cyberShieldGameState_${username}`);
-    let finalState;
-    if (savedState) {
-      finalState = JSON.parse(savedState);
-      setGameState(finalState);
-    } else {
-      finalState = DEFAULT_GAME_STATE;
-      setGameState(DEFAULT_GAME_STATE);
-    }
-    
-    updateLeaderboard(username, finalState.xp);
-    setCurrentScreen('dashboard');
-    return true;
+    return false;
   };
 
   const handleLogout = () => {
@@ -101,23 +133,29 @@ function App() {
   };
 
   const navigate = (screen, options = {}) => {
-    if (options.backTo && screen === 'url_detective') {
-      setUrlDetectiveBackTo(options.backTo);
-    } else if (screen === 'url_detective') {
-      setUrlDetectiveBackTo('dashboard');
+    if (screen === 'url_detective') {
+      setShowUrlDetective(true);
+      return;
     }
+
+    if (screen === 'schoolMap' && gameState.completedMissions.length >= 5) {
+      setCurrentScreen('results');
+      return;
+    }
+
     setCurrentScreen(screen);
   };
 
   const addXP = (amount) => {
     setGameState(prev => {
       const newXp = prev.xp + amount;
-      updateLeaderboard(currentUser, newXp);
-      return {
+      const newState = {
         ...prev,
         xp: newXp,
         level: newXp > 2000 ? 'Cyber Defender' : prev.level
       };
+      saveProgressToBackend(newState, currentUser);
+      return newState;
     });
   };
 
@@ -125,26 +163,34 @@ function App() {
     if (!gameState.completedMissions.includes(missionId)) {
       setGameState(prev => {
         const newComps = { ...prev.competencies };
-        if (missionId === 'mission_ruangguru') newComps.awareness = Math.min(100, newComps.awareness + 50);
-        if (missionId === 'mission_labkomputer') newComps.awareness = Math.min(100, newComps.awareness + 50);
-        if (missionId === 'mission_kantin') newComps.networkSecurity = Math.min(100, newComps.networkSecurity + 50);
-        if (missionId === 'mission_aula') newComps.socialEngineering = Math.min(100, newComps.socialEngineering + 100);
-        if (missionId === 'mission_serverroom') newComps.urlDetection = Math.min(100, newComps.urlDetection + 100);
-        if (missionId === 'boss_battle') {
-          newComps.passwordSecurity = Math.min(100, newComps.passwordSecurity + 100);
-          newComps.networkSecurity = Math.min(100, newComps.networkSecurity + 50);
+        if (missionId === 'mission_ruangguru') {
+          newComps.awareness = Math.min(100, newComps.awareness + 50);
+          newComps.passwordSecurity = Math.min(100, newComps.passwordSecurity + 50);
+        }
+        if (missionId === 'mission_labkomputer') {
+          newComps.awareness = Math.min(100, newComps.awareness + 50);
+        }
+        if (missionId === 'mission_kantin') {
+          newComps.networkSecurity = Math.min(100, newComps.networkSecurity + 100); // Kantin is the only network mission
+        }
+        if (missionId === 'mission_aula') {
+          newComps.socialEngineering = Math.min(100, newComps.socialEngineering + 100);
+          newComps.passwordSecurity = Math.min(100, newComps.passwordSecurity + 50);
+        }
+        if (missionId === 'mission_serverroom') {
+          newComps.urlDetection = Math.min(100, newComps.urlDetection + 100);
         }
 
         const newXp = prev.xp + xpEarned;
-        updateLeaderboard(currentUser, newXp);
-
-        return {
+        const newState = {
           ...prev,
           competencies: newComps,
           completedMissions: [...prev.completedMissions, missionId],
           xp: newXp,
           currentLevel: prev.currentLevel + 1
         };
+        saveProgressToBackend(newState, currentUser);
+        return newState;
       });
     }
   };
@@ -152,49 +198,44 @@ function App() {
   const recordMistake = (location, explanation) => {
     setGameState(prev => {
       const currentMistakes = prev.mistakes || [];
-      // Prevent exact duplicate mistakes to avoid spamming the results screen
       if (!currentMistakes.find(m => m.explanation === explanation)) {
-        
-        // Deduct competencies slightly if they make mistakes
         const newComps = { ...prev.competencies };
-        if (location.includes("Ruang Guru") || location.includes("Lab Komputer")) newComps.awareness = Math.max(0, newComps.awareness - 20);
-        if (location.includes("Kantin")) newComps.networkSecurity = Math.max(0, newComps.networkSecurity - 20);
-        if (location.includes("Aula")) newComps.socialEngineering = Math.max(0, newComps.socialEngineering - 20);
-        if (location.includes("Server Room")) newComps.urlDetection = Math.max(0, newComps.urlDetection - 20);
-        if (location.includes("Boss Battle")) {
-          newComps.passwordSecurity = Math.max(0, newComps.passwordSecurity - 10);
-          newComps.networkSecurity = Math.max(0, newComps.networkSecurity - 10);
+        if (location.includes("Ruang Guru")) {
+          newComps.awareness = Math.max(0, newComps.awareness - 20);
+          newComps.passwordSecurity = Math.max(0, newComps.passwordSecurity - 20);
+        }
+        if (location.includes("Lab Komputer")) {
+          newComps.awareness = Math.max(0, newComps.awareness - 20);
+        }
+        if (location.includes("Kantin")) {
+          newComps.networkSecurity = Math.max(0, newComps.networkSecurity - 20);
+        }
+        if (location.includes("Aula")) {
+          newComps.socialEngineering = Math.max(0, newComps.socialEngineering - 20);
+          newComps.passwordSecurity = Math.max(0, newComps.passwordSecurity - 20);
+        }
+        if (location.includes("Server Room")) {
+          newComps.urlDetection = Math.max(0, newComps.urlDetection - 20);
         }
 
-        return {
+        const newState = {
           ...prev,
           competencies: newComps,
           mistakes: [...currentMistakes, { location, explanation }]
         };
+        saveProgressToBackend(newState, currentUser);
+        return newState;
       }
       return prev;
     });
   };
 
   const resetGame = () => {
-    setGameState(prev => ({
-      ...prev,
-      currentLevel: 1,
-      completedMissions: [],
-      xp: 1500,
-      mistakes: [],
-      competencies: {
-        awareness: 0,
-        urlDetection: 0,
-        passwordSecurity: 0,
-        socialEngineering: 0,
-        networkSecurity: 0
-      }
-    }));
+    setGameState(DEFAULT_GAME_STATE);
+    saveProgressToBackend(DEFAULT_GAME_STATE, currentUser);
     setCurrentScreen('dashboard');
   };
 
-  // Screen router
   const renderScreen = () => {
     if (!currentUser) {
       return <Login onLogin={handleLogin} />;
@@ -204,7 +245,7 @@ function App() {
       case 'dashboard':
         return <Dashboard navigate={navigate} gameState={gameState} onLogout={handleLogout} username={currentUser} onReset={resetGame} setLeaderboardBackTo={setLeaderboardBackTo} />;
       case 'schoolMap':
-        return <SchoolMap navigate={navigate} gameState={gameState} />;
+        return <SchoolMap navigate={navigate} gameState={gameState} username={currentUser} />;
       case 'mission_ruangguru':
         return <RuangGuru navigate={navigate} completeMission={completeMission} addXP={addXP} recordMistake={recordMistake} username={currentUser} />;
       case 'mission_labkomputer':
@@ -213,14 +254,11 @@ function App() {
         return <Kantin navigate={navigate} completeMission={completeMission} addXP={addXP} recordMistake={recordMistake} username={currentUser} />;
       case 'mission_aula':
         return <Aula navigate={navigate} completeMission={completeMission} addXP={addXP} recordMistake={recordMistake} username={currentUser} />;
+      case 'serverroom': // just in case
       case 'mission_serverroom':
         return <ServerRoom navigate={navigate} completeMission={completeMission} addXP={addXP} recordMistake={recordMistake} username={currentUser} />;
-      case 'url_detective':
-        return <UrlDetective navigate={navigate} backTo={urlDetectiveBackTo} />;
       case 'cyber_scan':
         return <CyberScanChallenge navigate={navigate} addXP={addXP} />;
-      case 'boss_battle':
-        return <BossBattle navigate={navigate} completeMission={completeMission} addXP={addXP} recordMistake={recordMistake} />;
       case 'results':
         return <ResultsDashboard navigate={navigate} gameState={gameState} resetGame={resetGame} setLeaderboardBackTo={setLeaderboardBackTo} />;
       case 'leaderboard':
@@ -231,8 +269,21 @@ function App() {
   };
 
   return (
-    <div className="screen-container">
+    <div className="screen-container" style={{ position: 'relative' }}>
       {renderScreen()}
+      {showUrlDetective && (
+        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 999, background: 'var(--bg-dark)' }}>
+          <UrlDetective 
+            navigate={(dest) => {
+              setShowUrlDetective(false);
+              if (dest && dest !== currentScreen) {
+                setCurrentScreen(dest);
+              }
+            }} 
+            backTo={currentScreen} 
+          />
+        </div>
+      )}
     </div>
   );
 }

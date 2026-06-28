@@ -40,6 +40,7 @@
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   margin: 0;
   padding: 0;
+  font-size: 16px; /* Increased base font size */
 }
 
 body {
@@ -69,7 +70,7 @@ body {
 
 @media (min-width: 768px) {
   .screen-container {
-    max-width: 1200px;
+    max-width: 1400px; /* Increased from 1200px to accommodate larger UI */
     margin: 0 auto;
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), 0 0 100px rgba(11, 16, 30, 1);
     background-color: rgba(11, 16, 30, 0.9);

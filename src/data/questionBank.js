@@ -5,10 +5,10 @@ export const questionBank = {
       instruction: "Tugas: Pilih Wi-Fi yang paling aman untuk melakukan pembayaran. Jangan sampai salah pilih ya! (Klik Wi-Fi nya, lalu klik SAMBUNGKAN)",
       caseDescription: "Kamu baru saja selesai memesan semangkuk bakso dan es teh di kantin. Ketika mau bayar di kasir, ternyata dompetmu ketinggalan di kelas! Untungnya, kantin menerima pembayaran lewat QRIS/E-Wallet. Tapi masalahnya, kuota internetmu habis total. Tetapi ada 4 pilihan Wi-Fi di bawah ini. Mana yang paling aman untuk dipilih?",
       networks: [
-        { id: 1, name: 'WiFi_Kantin_Resmi', secure: true, type: 'WPA3', signal: '72%', mac: '00:14:22:01:23:45', status: 'Aman (Resmi)', desc: "Punya sandi yang kuat dan resmi milik sekolah." },
+        { id: 1, name: 'WiFi_Kantin_Resmi', secure: true, type: 'WPA3', signal: '72%', mac: '00:14:22:01:23:45', status: 'Keamanan Tinggi', desc: "Punya sandi yang kuat dan resmi milik sekolah." },
         { id: 2, name: 'WiFi_Kantin_Resmi', secure: false, type: 'Terbuka (Tanpa Sandi)', signal: '99%', mac: '84:A1:D3:EF:99:21', evilTwin: true, status: ' Tidak Terkunci', desc: "namanya sama dengan wifi resmi kampus tapi tidak di sandi" },
-        { id: 3, name: 'Free_Internet_Kantin', secure: false, type: 'Terbuka (Tanpa Sandi)', signal: '90%', mac: 'AA:BB:CC:DD:EE:FF', evilTwin: true, status: ' Tidak Terkunci', desc: "Wi-Fi umum gratisan tanpa sandi" },
-        { id: 4, name: 'WiFi_Kantin_Backup', secure: true, type: 'WEP', signal: '45%', mac: '11:22:33:44:55:66', status: 'Keamanan Lemah', desc: "Pakai sandi, tapi sistem keamanannya sudah sangat jadul dan mudah dibobol." }
+        { id: 3, name: 'Free_Internet_Kantin', secure: false, type: 'Terbuka (Tanpa Sandi)', signal: '80%', mac: 'AA:BB:CC:DD:EE:FF', evilTwin: true, status: ' Tidak Terkunci', desc: "Wi-Fi umum gratisan tanpa sandi" },
+        { id: 4, name: 'WiFi_Kantin', secure: true, type: 'WEP', signal: '45%', mac: '11:22:33:44:55:66', status: 'Keamanan Lemah', desc: "Pakai sandi, tapi sistem keamanannya sudah sangat jadul dan mudah dibobol." }
       ],
       correctAction: "connect_id_1",
       explanation: "Pilih Wi-Fi resmi yang ada sandinya. Wi-Fi tanpa sandi atau gratisan sangat berbahaya karena peretas atau hacker bisa dengan mudah mencuri datamu."
@@ -18,10 +18,10 @@ export const questionBank = {
       instruction: "Tugas: Pilih Wi-Fi yang berbahaya (jebakan peretas) dari daftar ini, lalu klik tombol 'LAPORKAN WI-FI PALSU' agar segera diblokir.",
       caseDescription: "Wah, ternyata ada peretas di kantin! Dia membuat Wi-Fi palsu dengan nama yang mirip Wi-Fi sekolah untuk menjebak siswa lain. Bisakah kamu menemukan dan melaporkannya?",
       networks: [
-        { id: 1, name: 'WiFi_Kantin_Resmi', secure: true, type: 'WPA3', signal: '72%', mac: '00:14:22:01:23:45', status: 'Aman (Resmi)', desc: "Punya sandi yang kuat dan resmi milik sekolah." },
+        { id: 1, name: 'WiFi_Kantin_Resmi', secure: true, type: 'WPA3', signal: '72%', mac: '00:14:22:01:23:45', status: 'Keamanan Tinggi', desc: "Punya sandi yang kuat dan resmi milik sekolah." },
         { id: 2, name: 'WiFi_Kantin_Resmi', secure: false, type: 'Terbuka ', signal: '90%', mac: '84:A1:D3:EF:99:21', evilTwin: true, status: 'Tidak Terkunci', desc: "namanya sama dengan wifi resmi kampus tapi tidak di sandi" },
-        { id: 3, name: 'Free_Internet_Kantin', secure: false, type: 'Terbuka', signal: '90%', mac: 'AA:BB:CC:DD:EE:FF', evilTwin: true, status: ' Tidak Terkunci', desc: "Wi-Fi umum gratisan tanpa sandi" },
-        { id: 4, name: 'WiFi_Kantin_Backup', secure: true, type: 'WEP', signal: '45%', mac: '11:22:33:44:55:66', status: 'Keamanan Lemah', desc: "Pakai sandi, tapi sistem keamanannya sudah sangat jadul dan mudah dibobol." }
+        { id: 3, name: 'Free_Internet_Kantin', secure: false, type: 'Terbuka', signal: '80%', mac: 'AA:BB:CC:DD:EE:FF', evilTwin: true, status: ' Tidak Terkunci', desc: "Wi-Fi umum gratisan tanpa sandi" },
+        { id: 4, name: 'WiFi_Kantin', secure: true, type: 'WEP', signal: '45%', mac: '11:22:33:44:55:66', status: 'Keamanan Lemah', desc: "Pakai sandi, tapi sistem keamanannya sudah sangat jadul dan mudah dibobol." }
       ],
       correctAction: "report_id_2",
       explanation: "Kalau kamu menemukan Wi-Fi palsu yang namanya mirip, jangan didiamkan. Segera laporkan agar guru bisa memblokirnya dan teman-temanmu aman."

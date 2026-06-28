@@ -73,10 +73,10 @@ const RuangGuru = ({ navigate, completeMission, addXP, recordMistake, username }
       
       if (newWins >= 3) {
         setStatus('success');
-        completeMission('mission_ruangguru', 150);
+        completeMission('mission_ruangguru', 0);
       } else {
         setStatus('correct');
-        addXP(20);
+        addXP(50);
       }
     } else {
       if (isPhishingFlagged) {
@@ -115,10 +115,10 @@ const RuangGuru = ({ navigate, completeMission, addXP, recordMistake, username }
         <h3 className="font-bold text-center text-glow-neon">Misi: Detektif Kotak Masuk Email</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '-0.5rem', marginBottom: '0.5rem' }}>
           <div style={{ background: 'rgba(255, 165, 0, 0.1)', borderLeft: '3px solid #F59E0B', padding: '10px', borderRadius: '4px' }}>
-            <p style={{ margin: 0, fontSize: '0.85rem' }}><span style={{fontWeight: 'bold', color: '#F59E0B'}}>Studi Kasus:</span> Beberapa guru melaporkan menerima email aneh yang mendesak mereka untuk membuka tautan atau lampiran penting. Ada kemungkinan ini adalah serangan penipuan.</p>
+            <p style={{ margin: 0, fontSize: '1.1rem' }}><span style={{fontWeight: 'bold', color: '#F59E0B'}}>Studi Kasus:</span> Suasana di Ruang Guru mendadak cemas karena beberapa guru menerima email misterius yang mendesak mereka untuk segera mengklik tautan atau mengunduh lampiran di dalamnya. Email-email ini sengaja dirancang sangat formal dengan nama instansi resmi seperti Kemdikbud, Google, hingga bank, demi mengelabui para guru. Jadilah detektif siber dan bantu periksa kotak masuk mereka untuk memisahkan mana email yang aman dan mana yang merupakan jebakan pencurian data!.</p>
           </div>
           <div style={{ background: 'rgba(0, 240, 255, 0.1)', borderLeft: '3px solid var(--primary-color)', padding: '10px', borderRadius: '4px' }}>
-            <p style={{ margin: 0, fontSize: '0.85rem', fontWeight: 'bold' }}>{question.instruction}</p>
+            <p style={{ margin: 0, fontSize: '1.1rem', fontWeight: 'bold' }}>{question.instruction}</p>
           </div>
         </div>
         
@@ -133,7 +133,7 @@ const RuangGuru = ({ navigate, completeMission, addXP, recordMistake, username }
             }} />
           ))}
         </div>
-        <p className="text-center" style={{ fontSize: '0.85rem', marginTop: '-0.5rem' }}>Kamu harus menebak 3 email dengan benar berturut-turut untuk menang!</p>
+        <p className="text-center" style={{ fontSize: '1.1rem', marginTop: '-0.5rem' }}>Kamu harus menebak 3 email dengan benar berturut-turut untuk menyelesaikan misi</p>
 
         <div className="cyber-card" style={{ padding: '0' }}>
           <div style={{ background: 'rgba(255,255,255,0.05)', padding: '1rem', borderTopLeftRadius: '16px', borderTopRightRadius: '16px', borderBottom: '1px solid var(--border-blue)' }}>
@@ -142,21 +142,28 @@ const RuangGuru = ({ navigate, completeMission, addXP, recordMistake, username }
               <h4 style={{ margin: 0 }}>Kotak Masuk Email</h4>
             </div>
             <div style={{ background: 'rgba(0,0,0,0.2)', padding: '0.5rem', borderRadius: '8px' }}>
-              <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)' }}>Dari: <span style={{ color: 'var(--danger-red)', fontWeight: 'bold' }}>{question.sender}</span></p>
-              <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)' }}>Subjek: {question.subject}</p>
+              <p style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-muted)' }}>Dari: <span style={{ color: 'var(--danger-red)', fontWeight: 'bold' }}>{question.sender}</span></p>
+              <p style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-muted)' }}>Subjek: {question.subject}</p>
             </div>
           </div>
-          <div style={{ padding: '1.5rem', fontSize: '0.95rem', color: 'var(--text-main)', background: 'transparent' }}>
+          <div style={{ padding: '1.5rem', fontSize: '1.2rem', color: 'var(--text-main)', background: 'transparent' }}>
             <p>Yth. Bapak/Ibu Guru,</p>
             <p style={{ marginTop: '0.5rem', lineHeight: '1.5' }}>{renderTextWithLinks(question.body)}</p>
             <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
-              <button className="btn cyber-btn" style={{ width: '100%', borderRadius: '8px' }}>Klik Link / Buka File (Hati-Hati!)</button>
+              <button 
+                className="btn cyber-btn hover-glow" 
+                style={{ width: '100%', borderRadius: '8px', cursor: status === 'playing' ? 'pointer' : 'not-allowed' }}
+                onClick={() => { if (status === 'playing') handleChoice(false); }}
+                disabled={status !== 'playing'}
+              >
+                Klik Link / Buka File (Hati-Hati!)
+              </button>
             </div>
           </div>
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '0.5rem' }}>
-           <button className="btn flex-row" style={{ background: 'var(--primary-color)', color: 'white', borderRadius: '8px', padding: '8px 16px', fontSize: '0.9rem', width: '100%', justifyContent: 'center' }} onClick={() => navigate('url_detective', { backTo: 'mission_ruangguru' })}>
+           <button className="btn flex-row" style={{ background: 'var(--primary-color)', color: 'white', borderRadius: '8px', padding: '8px 16px', fontSize: '1.15rem', width: '100%', justifyContent: 'center' }} onClick={() => navigate('url_detective', { backTo: 'mission_ruangguru' })}>
               <Search size={18} style={{ marginRight: '8px' }}/> Cek Link di Alat Pemeriksa
            </button>
         </div>
@@ -176,7 +183,7 @@ const RuangGuru = ({ navigate, completeMission, addXP, recordMistake, username }
            <div className="cyber-card flex-column text-center animate-fade-in mt-2" style={{ borderColor: 'var(--success-green)', gap: '0.5rem' }}>
             <CheckCircle size={40} className="text-success" style={{ alignSelf: 'center' }} />
             <h3 className="text-success font-bold">Betul Sekali!</h3>
-            <p style={{ fontSize: '0.9rem' }}>{question.explanation}</p>
+            <p style={{ fontSize: '1.15rem' }}>{question.explanation}</p>
             <p className="font-bold text-success">+20 XP</p>
             <button className="btn cyber-btn mt-2 flex-row flex-center" onClick={handleNext}>
               Lanjut <ArrowRight size={18} style={{ marginLeft: '4px' }}/>
@@ -188,7 +195,7 @@ const RuangGuru = ({ navigate, completeMission, addXP, recordMistake, username }
           <div className="cyber-card flex-column text-center animate-fade-in mt-2" style={{ borderColor: 'var(--success-green)', gap: '0.5rem' }}>
             <CheckCircle size={40} className="text-success" style={{ alignSelf: 'center' }} />
             <h3 className="text-success font-bold">Luar Biasa!</h3>
-            <p style={{ fontSize: '0.9rem' }}>Kamu berhasil menebak 3 email dengan benar! Sekarang semua guru aman dari penipuan.</p>
+            <p style={{ fontSize: '1.15rem' }}>Kamu berhasil menebak 3 email dengan benar! Sekarang semua guru aman dari penipuan.</p>
             <p className="font-bold text-success">+150 XP</p>
             <button className="btn cyber-btn mt-2" onClick={() => navigate('schoolMap')}>Kembali ke Peta</button>
           </div>
@@ -198,8 +205,8 @@ const RuangGuru = ({ navigate, completeMission, addXP, recordMistake, username }
           <div className="cyber-card flex-column text-center animate-fade-in mt-2" style={{ borderColor: 'var(--danger-red)', gap: '0.5rem' }}>
             <ShieldAlert size={40} className="text-danger" style={{ alignSelf: 'center' }} />
             <h3 className="text-danger font-bold">{failMessage.title || 'Ups, Tebakanmu Salah!'}</h3>
-            <p style={{ fontSize: '0.9rem' }}>{failMessage.desc}</p>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{question.explanation}</p>
+            <p style={{ fontSize: '1.15rem' }}>{failMessage.desc}</p>
+            <p style={{ fontSize: '1.1rem', color: 'var(--text-muted)' }}>{question.explanation}</p>
             <p className="font-bold text-danger">Ayo mengulang dari awal ya. Tetap semangat!</p>
             <button className="btn cyber-btn mt-2" onClick={handleRetry}>Coba Lagi</button>
             <button className="btn btn-outline mt-2" onClick={() => navigate('schoolMap')}>Kembali ke Peta</button>
@@ -210,7 +217,7 @@ const RuangGuru = ({ navigate, completeMission, addXP, recordMistake, username }
           <div className="cyber-card flex-column text-center animate-fade-in mt-2" style={{ borderColor: 'var(--warning-yellow)', gap: '0.5rem' }}>
             <AlertTriangle size={40} className="text-warning" style={{ alignSelf: 'center' }} />
             <h3 className="text-warning font-bold">Waktu Habis!</h3>
-            <p style={{ fontSize: '0.9rem' }}>Kamu terlalu lama berpikir, sehingga virusnya keburu masuk. Ayo coba lagi!</p>
+            <p style={{ fontSize: '1.15rem' }}>Kamu terlalu lama berpikir, sehingga virusnya keburu masuk. Ayo coba lagi!</p>
             <button className="btn cyber-btn mt-2" onClick={handleRetry}>Coba Lagi</button>
             <button className="btn btn-outline mt-2" onClick={() => navigate('schoolMap')}>Kembali ke Peta</button>
           </div>

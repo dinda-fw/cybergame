@@ -114,7 +114,7 @@ const UrlChecker = ({ navigate, backTo }) => {
       <div className="content-area flex-column" style={{ padding: '1rem', gap: '1rem' }}>
         <div className="glass-card flex-column" style={{ padding: '1.5rem', gap: '1rem' }}>
           <h3 className="font-bold text-center">Analisis Tautan Keamanan</h3>
-          <p className="text-center text-muted" style={{ fontSize: '0.9rem' }}>Masukkan URL untuk memeriksa ancaman phishing, malware, atau penipuan.</p>
+          <p className="text-center text-muted" style={{ fontSize: '1.15rem' }}>Masukkan URL untuk memeriksa ancaman phishing, malware, atau penipuan.</p>
           
           <div style={{ display: 'flex', gap: '0.5rem' }}>
             <input 
@@ -123,7 +123,7 @@ const UrlChecker = ({ navigate, backTo }) => {
               onChange={(e) => setUrl(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleScan()}
               style={{ flexGrow: 1, padding: '10px 15px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '1rem' }}
-              placeholder="Contoh: www.micros0ft.com"
+              placeholder="Contoh: www.microsoft.com"
             />
             <button className="btn btn-primary" style={{ padding: '10px 15px', borderRadius: '8px' }} onClick={handleScan}>
               <Search size={20} />
@@ -153,8 +153,8 @@ const UrlChecker = ({ navigate, backTo }) => {
                     <span className="font-bold text-danger" style={{ fontSize: '1.2rem' }}>Status: URL BERBAHAYA</span>
                   </div>
                   
-                  <p className="font-bold" style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>Bukti Ancaman:</p>
-                  <ul style={{ listStyle: 'none', padding: 0, fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <p className="font-bold" style={{ fontSize: '1.15rem', marginBottom: '0.5rem' }}>Bukti Ancaman:</p>
+                  <ul style={{ listStyle: 'none', padding: 0, fontSize: '1.15rem', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     {analysisResult.reasons.map((r, i) => (
                       <li key={i} className="flex-row" style={{ gap: '8px', alignItems: 'flex-start' }}>
                         <CheckCircle2 size={18} className="text-danger" style={{ flexShrink: 0, marginTop: '2px' }} /> 
@@ -170,8 +170,8 @@ const UrlChecker = ({ navigate, backTo }) => {
                   <AlertTriangle size={28} className="text-warning" />
                   <span className="font-bold text-warning" style={{ fontSize: '1.2rem' }}>Status: MENCURIGAKAN</span>
                 </div>
-                <p className="font-bold" style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>Bukti Potensi Ancaman:</p>
-                <ul style={{ listStyle: 'none', padding: 0, fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <p className="font-bold" style={{ fontSize: '1.15rem', marginBottom: '0.5rem' }}>Bukti Potensi Ancaman:</p>
+                <ul style={{ listStyle: 'none', padding: 0, fontSize: '1.15rem', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {analysisResult.reasons.map((r, i) => (
                     <li key={i} className="flex-row" style={{ gap: '8px', alignItems: 'flex-start' }}>
                       <AlertCircle size={18} className="text-warning" style={{ flexShrink: 0, marginTop: '2px' }} /> 
@@ -186,8 +186,8 @@ const UrlChecker = ({ navigate, backTo }) => {
                   <ShieldCheck size={28} className="text-success" />
                   <span className="font-bold text-success" style={{ fontSize: '1.2rem' }}>Status: URL AMAN</span>
                 </div>
-                <p style={{ fontSize: '0.9rem' }}>Domain ini terlihat bersih. {analysisResult.reasons[0]}</p>
-                <p style={{ fontSize: '0.85rem', marginTop: '0.5rem', opacity: 0.8 }}>Namun, selalu periksa halaman yang sedang Anda kunjungi dengan hati-hati.</p>
+                <p style={{ fontSize: '1.15rem' }}>Domain ini terlihat bersih. {analysisResult.reasons[0]}</p>
+                <p style={{ fontSize: '1.1rem', marginTop: '0.5rem', opacity: 0.8 }}>Namun, selalu periksa halaman yang sedang Anda kunjungi dengan hati-hati.</p>
               </div>
             )}
             
@@ -196,7 +196,7 @@ const UrlChecker = ({ navigate, backTo }) => {
                   <AlertCircle size={20} className="text-primary" />
                   <span className="font-bold text-primary">Info Cyber Mentor</span>
                </div>
-               <p style={{ fontSize: '0.85rem', lineHeight: '1.5' }}>
+               <p style={{ fontSize: '1.1rem', lineHeight: '1.5' }}>
                   Penipu seringkali membuat domain yang mirip secara visual (seperti micros<strong>0</strong>ft atau g<strong>00</strong>gle), atau menyisipkan kata "login/update" pada nama domain untuk meyakinkan korban. Alat ini mendeteksi pola tersebut!
                </p>
             </div>

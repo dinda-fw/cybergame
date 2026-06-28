@@ -72,8 +72,8 @@ const CyberScanChallenge = ({ navigate, addXP }) => {
               </div>
             </div>
             <h3 className="font-bold text-glow">Cyber Challenge</h3>
-            <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Deteksi URL, Email, dan Chat dengan cepat! Waktumu 60 detik.</p>
-            <p style={{ fontSize: '0.8rem', color: 'var(--danger-red)' }}>Salah tebak = penalti waktu 5 detik!</p>
+            <p style={{ fontSize: '1.15rem', color: 'var(--text-muted)' }}>Deteksi URL, Email, dan Chat dengan cepat! Waktumu 60 detik.</p>
+            <p style={{ fontSize: '1.05rem', color: 'var(--danger-red)' }}>Salah tebak = penalti waktu 5 detik!</p>
             <button className="cyber-btn" onClick={startGame}>Mulai Tantangan</button>
           </div>
         )}
