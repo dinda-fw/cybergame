@@ -29,7 +29,7 @@ const DEFAULT_GAME_STATE = {
   mistakes: []
 };
 
-const API_URL = 'http://localhost:3001/api';
+const API_URL = '/api';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);

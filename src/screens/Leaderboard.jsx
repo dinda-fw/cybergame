@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import { Trophy, ArrowLeft, X, Shield, ServerCrash, CheckCircle } from 'lucide-react';
 
-const API_URL = 'http://localhost:3001/api';
+const API_URL = '/api';
 
 const Leaderboard = ({ navigate, username, currentXp, backTo = 'dashboard' }) => {
   const [leaderboardData, setLeaderboardData] = useState([]);
@@ -39,14 +39,14 @@ const Leaderboard = ({ navigate, username, currentXp, backTo = 'dashboard' }) =>
 
   return (
     <div className="flex-column h-full">
-      <Header 
-        title="Papan Peringkat" 
-        showBack={true} 
-        onBack={() => navigate(backTo)} 
+      <Header
+        title="Papan Peringkat"
+        showBack={true}
+        onBack={() => navigate(backTo)}
       />
-      
+
       <div className="content-area scroll-y flex-column" style={{ padding: '1.5rem', gap: '1rem' }}>
-        
+
         {/* Banner */}
         <div className="cyber-card flex-row flex-center" style={{ gap: '1rem', background: 'linear-gradient(135deg, rgba(0, 240, 255, 0.1) 0%, rgba(136, 204, 20, 0.1) 100%)', borderColor: 'var(--primary-color)' }}>
           <Trophy size={36} color="var(--warning-yellow)" className="animate-bounce" />
@@ -61,7 +61,7 @@ const Leaderboard = ({ navigate, username, currentXp, backTo = 'dashboard' }) =>
           {leaderboardData.map((player, idx) => {
             const isCurrentUser = player.username.toLowerCase() === username.toLowerCase();
             const rank = idx + 1;
-            
+
             let rankBadge = `${rank}`;
             let rankColor = 'var(--text-main)';
             let cardBg = isCurrentUser ? 'rgba(0, 240, 255, 0.15)' : 'rgba(0,0,0,0.2)';
@@ -72,7 +72,7 @@ const Leaderboard = ({ navigate, username, currentXp, backTo = 'dashboard' }) =>
             else if (rank === 3) { rankBadge = '🥉'; rankColor = '#b45309'; }
 
             return (
-              <div 
+              <div
                 key={idx}
                 onClick={() => handleUserClick(player.username)}
                 style={{
@@ -121,7 +121,7 @@ const Leaderboard = ({ navigate, username, currentXp, backTo = 'dashboard' }) =>
               <h2 className="text-glow" style={{ margin: 0, fontSize: '1.5rem' }}>Detail Siswa</h2>
               <X size={24} color="white" style={{ cursor: 'pointer' }} onClick={() => setIsModalOpen(false)} />
             </div>
-            
+
             <div style={{ display: 'flex', gap: '15px', marginBottom: '20px' }}>
               <div style={{ background: 'rgba(0,240,255,0.1)', padding: '15px', borderRadius: '12px', flex: 1, border: '1px solid var(--secondary-color)' }}>
                 <div className="text-muted" style={{ fontSize: '0.9rem' }}>Nama</div>
