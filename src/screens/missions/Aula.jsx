@@ -33,7 +33,7 @@ const renderTextWithLinks = (text) => {
 const Aula = ({ navigate, completeMission, addXP, recordMistake, username }) => {
   const [status, setStatus] = useState('playing'); // playing, success, fail, timeUp
   const [scenario, setScenario] = useState(null);
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [timeLeft, setTimeLeft] = useState(120);
 
   useEffect(() => {
     let hash = 0;
@@ -43,7 +43,7 @@ const Aula = ({ navigate, completeMission, addXP, recordMistake, username }) => 
     }
     const index = Math.abs(hash) % questionBank.aula.length;
     setScenario(questionBank.aula[index]);
-    setTimeLeft(60);
+    setTimeLeft(120);
     setStatus('playing');
   }, [username]);
 
@@ -74,7 +74,7 @@ const Aula = ({ navigate, completeMission, addXP, recordMistake, username }) => 
   };
 
   const handleRetry = () => {
-    setTimeLeft(60);
+    setTimeLeft(120);
     setStatus('playing');
   };
 

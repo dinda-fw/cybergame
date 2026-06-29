@@ -7,8 +7,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Header from '../components/Header';
 import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight, X } from 'lucide-react';
-import { io } from 'socket.io-client';
-
 // ─── Virtual World Dimensions (pixels) ───────────────────────────────────────
 const WORLD_W = 3200;
 const WORLD_H = 2400;
@@ -36,13 +34,13 @@ const MISSIONS = [
   {
     id: 'ruangguru', label: 'Ruang Guru', misi: 'Misi 4',
     route: 'mission_ruangguru', missionId: 'mission_ruangguru', levelRequired: 4,
-    wx: 1600, wy: 350, bw: 300, bh: 210,
+    wx: 2600, wy: 350, bw: 300, bh: 210,
     color: 0xDC2626, roof: 0xB91C1C, cssColor: '#DC2626',
   },
   {
     id: 'labkomputer', label: 'Lab Komputer', misi: 'Misi 5',
     route: 'mission_labkomputer', missionId: 'mission_labkomputer', levelRequired: 5,
-    wx: 2600, wy: 350, bw: 300, bh: 210,
+    wx: 1600, wy: 350, bw: 300, bh: 210,
     color: 0x2563EB, roof: 0x1D4ED8, cssColor: '#2563EB',
   }
 ];
@@ -98,12 +96,10 @@ const TREE_POSITIONS = [
 const SchoolMap = ({ navigate, gameState, username }) => {
   const containerRef = useRef(null);
   const gameRef = useRef(null);
-  const socketRef = useRef(null);
   const bridgeRef = useRef({
     navigate, gameState, username,
     setNearby: null, setDialog: null,
-    dpad: { up: false, down: false, left: false, right: false },
-    socket: null,
+    dpad: { up: false, down: false, left: false, right: false }
   });
 
   const [nearby, setNearby] = useState(null);
@@ -116,27 +112,6 @@ const SchoolMap = ({ navigate, gameState, username }) => {
   bridgeRef.current.username = username;
   bridgeRef.current.setNearby = setNearby;
   bridgeRef.current.setDialog = setDialog;
-  bridgeRef.current.socket = socketRef.current;
-
-  // ── Socket.IO initialization ───────────────────────────────────────────────
-  useEffect(() => {
-    const socket = io('http://localhost:3001');
-    socketRef.current = socket;
-    bridgeRef.current.socket = socket;
-
-    socket.on('connect', () => {
-      console.log('[Socket] Connected to multiplayer server');
-      socket.emit('join', {
-        userId: username,
-        username: username
-      });
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, [gameState.username]);
-
   // ── Phaser initialization ──────────────────────────────────────────────────
   useEffect(() => {
     if (!containerRef.current || gameRef.current) return;
@@ -183,12 +158,6 @@ const SchoolMap = ({ navigate, gameState, username }) => {
           this._nearbyBld = null;
           this._glowStates = {};   // track glow per building to avoid per-frame tween spam
 
-          // Multiplayer Setup
-          this._remotePlayers = {};
-          const socket = bridge.current.socket;
-          if (socket) {
-            this._setupMultiplayer(socket);
-          }
         }
 
         // ── Update: called every frame ──────────────────────────────────────
@@ -200,7 +169,6 @@ const SchoolMap = ({ navigate, gameState, username }) => {
           if (this._playerNameText) {
             this._playerNameText.setPosition(this._player.x, this._player.y - 45);
           }
-          this._syncPlayerMovement();
         }
 
         // ══════════════════════════════════════════════════════════════════════
@@ -471,8 +439,8 @@ const SchoolMap = ({ navigate, gameState, username }) => {
           ];
           lamps.forEach(([x, y]) => this.add.image(x, y, 'lamp').setDepth(2));
 
-          // Benches near fountain
-          [[WORLD_W / 2 - 320, 600], [WORLD_W / 2 + 320, 600], [WORLD_W / 2 - 320, 680], [WORLD_W / 2 + 320, 680]].forEach(([x, y]) =>
+          // Benches near buildings and fountain
+          [[400, 2050], [800, 2050], [1300, 1150], [1900, 1150]].forEach(([x, y]) =>
             this.add.image(x, y, 'bench').setDepth(2)
           );
 
@@ -1229,76 +1197,6 @@ const SchoolMap = ({ navigate, gameState, username }) => {
           }).setOrigin(0.5).setDepth(9);
         }
 
-        // ══════════════════════════════════════════════════════════════════════
-        // MULTIPLAYER SYNC
-        // ══════════════════════════════════════════════════════════════════════
-        _setupMultiplayer(socket) {
-          socket.on('playersList', (players) => {
-            players.forEach(p => {
-              if (p.id !== socket.id) this._addRemotePlayer(p);
-            });
-          });
-
-          socket.on('playerJoined', (p) => {
-            if (p.id !== socket.id) this._addRemotePlayer(p);
-          });
-
-          socket.on('playerLeft', (socketId) => {
-            if (this._remotePlayers[socketId]) {
-              this._remotePlayers[socketId].sprite.destroy();
-              this._remotePlayers[socketId].nameText.destroy();
-              delete this._remotePlayers[socketId];
-            }
-          });
-
-          socket.on('playerMoved', (data) => {
-            const rp = this._remotePlayers[data.id];
-            if (rp) {
-              this.tweens.add({
-                targets: rp.sprite, x: data.x, y: data.y, duration: 100
-              });
-              this.tweens.add({
-                targets: rp.nameText, x: data.x, y: data.y - 45, duration: 100
-              });
-
-              const animKey = `p-${data.direction}-${data.isMoving ? '1' : '0'}`;
-              if (rp.sprite.texture.key !== animKey) {
-                rp.sprite.setTexture(animKey);
-              }
-            }
-          });
-        }
-
-        _addRemotePlayer(p) {
-          if (this._remotePlayers[p.id]) return;
-          const sprite = this.add.image(p.x, p.y, `p-${p.direction}-0`).setScale(2.4).setDepth(8);
-
-          const nameText = this.add.text(p.x, p.y - 45, p.username, {
-            fontSize: '12px', fontFamily: '"Inter", sans-serif', fontStyle: 'bold',
-            color: '#ffffff', stroke: '#000000', strokeThickness: 3,
-          }).setOrigin(0.5).setDepth(9);
-
-          this._remotePlayers[p.id] = { sprite, nameText };
-        }
-
-        _syncPlayerMovement() {
-          const socket = bridge.current.socket;
-          if (!socket) return;
-
-          const px = Math.round(this._player.x);
-          const py = Math.round(this._player.y);
-          const dir = this._lastDir;
-          const isMoving = this._isMoving;
-
-          if (this._lastSyncX !== px || this._lastSyncY !== py || this._lastSyncDir !== dir || this._lastSyncMoving !== isMoving) {
-            this._lastSyncX = px;
-            this._lastSyncY = py;
-            this._lastSyncDir = dir;
-            this._lastSyncMoving = isMoving;
-
-            socket.emit('move', { x: px, y: py, direction: dir, isMoving });
-          }
-        }
 
         _setupCamera() {
           this.cameras.main

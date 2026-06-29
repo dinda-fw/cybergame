@@ -25,13 +25,13 @@ const deterministicShuffle = (username, items) => {
 const ServerRoom = ({ navigate, completeMission, addXP, recordMistake, username }) => {
   const [status, setStatus] = useState('playing'); // playing, checking, success, fail, timeUp
   const [urls, setUrls] = useState([]);
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [timeLeft, setTimeLeft] = useState(180);
 
   useEffect(() => {
     const shuffled = deterministicShuffle(username, questionBank.serverRoom).slice(0, 8);
     const initialUrls = shuffled.map(q => ({ ...q, zone: 'unassigned' }));
     setUrls(initialUrls);
-    setTimeLeft(120);
+    setTimeLeft(180);
     setStatus('playing');
   }, [username]);
 
@@ -91,7 +91,7 @@ const ServerRoom = ({ navigate, completeMission, addXP, recordMistake, username 
   };
 
   const handleRetry = () => {
-    setTimeLeft(120);
+    setTimeLeft(180);
     const shuffled = deterministicShuffle(username, questionBank.serverRoom).slice(0, 8);
     const initialUrls = shuffled.map(q => ({ ...q, zone: 'unassigned' }));
     setUrls(initialUrls);

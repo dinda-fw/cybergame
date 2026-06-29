@@ -54,6 +54,12 @@ function App() {
   };
 
   useEffect(() => {
+    if (currentUser && gameState !== DEFAULT_GAME_STATE) {
+      saveProgressToBackend(gameState, currentUser);
+    }
+  }, [gameState, currentUser]);
+
+  useEffect(() => {
     const checkLogin = async () => {
       const savedUser = localStorage.getItem('cyberShieldUser');
       if (savedUser) {
@@ -154,7 +160,6 @@ function App() {
         xp: newXp,
         level: newXp > 2000 ? 'Cyber Defender' : prev.level
       };
-      saveProgressToBackend(newState, currentUser);
       return newState;
     });
   };
@@ -189,7 +194,6 @@ function App() {
           xp: newXp,
           currentLevel: prev.currentLevel + 1
         };
-        saveProgressToBackend(newState, currentUser);
         return newState;
       });
     }
@@ -220,10 +224,9 @@ function App() {
 
         const newState = {
           ...prev,
-          competencies: newComps,
-          mistakes: [...currentMistakes, { location, explanation }]
+          mistakes: [...currentMistakes, { location, explanation }],
+          competencies: newComps
         };
-        saveProgressToBackend(newState, currentUser);
         return newState;
       }
       return prev;

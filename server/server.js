@@ -2,15 +2,10 @@ const express = require('express');
 const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
-const http = require('http');
-const SocketManager = require('./socket/SocketManager');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-
-const server = http.createServer(app);
-const socketManager = new SocketManager(server);
 
 const dbPath = path.resolve(__dirname, 'cybergame.db');
 const db = new sqlite3.Database(dbPath);
@@ -36,19 +31,6 @@ db.serialize(() => {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
-  
-  // Seed initial mock players if empty
-  db.get("SELECT count(*) as count FROM users", (err, row) => {
-    if (row.count === 0) {
-      const stmt = db.prepare("INSERT INTO users (username, class_name, xp) VALUES (?, ?, ?)");
-      stmt.run('Budi_Cyber', '10A', 2800);
-      stmt.run('Siti_Secure', '10B', 2450);
-      stmt.run('Hacker_Noob', '11A', 1900);
-      stmt.run('Agus_Defender', '11C', 1650);
-      stmt.run('Roni_Admin', '12B', 1250);
-      stmt.finalize();
-    }
-  });
 });
 
 // Login or Create User
@@ -151,6 +133,6 @@ app.get('/api/user/:username', (req, res) => {
 });
 
 const PORT = 3001;
-server.listen(PORT, () => {
-  console.log(`Server (HTTP + Socket.IO) running on http://localhost:${PORT}`);
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });

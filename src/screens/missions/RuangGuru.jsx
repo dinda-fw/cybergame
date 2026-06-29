@@ -38,7 +38,7 @@ const RuangGuru = ({ navigate, completeMission, addXP, recordMistake, username }
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [consecutiveWins, setConsecutiveWins] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [timeLeft, setTimeLeft] = useState(300);
   const [failMessage, setFailMessage] = useState({ title: '', desc: '' });
 
   useEffect(() => {
@@ -46,7 +46,7 @@ const RuangGuru = ({ navigate, completeMission, addXP, recordMistake, username }
     setQuestions(shuffled);
     setCurrentIndex(0);
     setConsecutiveWins(0);
-    setTimeLeft(60);
+    setTimeLeft(300);
     setStatus('playing');
   }, [username]);
 
@@ -93,13 +93,13 @@ const RuangGuru = ({ navigate, completeMission, addXP, recordMistake, username }
 
   const handleNext = () => {
     setCurrentIndex(prev => (prev + 1) % questions.length);
-    setTimeLeft(60);
+    setTimeLeft(300);
     setStatus('playing');
   };
 
   const handleRetry = () => {
     setCurrentIndex(prev => (prev + 1) % questions.length);
-    setTimeLeft(60);
+    setTimeLeft(300);
     setStatus('playing');
   };
 

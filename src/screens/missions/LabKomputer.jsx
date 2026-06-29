@@ -29,14 +29,14 @@ const LabKomputer = ({ navigate, completeMission, addXP, recordMistake, username
   
   // Progress tracking
   const [processedPcs, setProcessedPcs] = useState([]); // Array of { id, isCorrect }
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [timeLeft, setTimeLeft] = useState(120);
 
   useEffect(() => {
     const shuffled = deterministicShuffle(username, questionBank.labKomputer);
     setPcs(shuffled);
     setSelectedPCId(shuffled[0]?.id);
     setProcessedPcs([]);
-    setTimeLeft(60);
+    setTimeLeft(120);
     setStatus('playing');
   }, [username]);
 
@@ -85,7 +85,7 @@ const LabKomputer = ({ navigate, completeMission, addXP, recordMistake, username
     if (nextUnprocessed) {
       setSelectedPCId(nextUnprocessed.id);
     }
-    setTimeLeft(60);
+    setTimeLeft(120);
     setStatus('playing');
   };
 
@@ -94,7 +94,7 @@ const LabKomputer = ({ navigate, completeMission, addXP, recordMistake, username
     setPcs(shuffled);
     setSelectedPCId(shuffled[0]?.id);
     setProcessedPcs([]);
-    setTimeLeft(60);
+    setTimeLeft(120);
     setStatus('playing');
   };
 
