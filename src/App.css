@@ -162,12 +162,17 @@
   height: 100%;
   width: 100%;
   background-color: var(--bg-color);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  padding-top: env(safe-area-inset-top);
 }
 
 .content-area {
   flex-grow: 1;
   padding: 1rem;
   overflow-y: auto;
+  min-height: 0; /* CRITICAL: Allows flex child to scroll */
 }
 
 /* Progress bar */
@@ -180,8 +185,51 @@
   margin-top: 0.5rem;
 }
 
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
 .progress-bar {
   height: 100%;
   background-color: var(--success-green);
   transition: width 0.5s ease-out;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .mobile-col {
+    flex-direction: column !important;
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .mobile-w-full {
+    width: 100% !important;
+  }
+  
+  .content-area {
+    padding: 0.5rem;
+  }
+  
+  .glass-card, .cyber-card {
+    padding: 1rem;
+  }
+  
+  .app-header {
+    padding: 1rem 0.75rem 0.75rem;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+  }
+  
+  * {
+    font-size: 15px;
+  }
+  
+  h2 { font-size: 1.3rem !important; }
+  h3 { font-size: 1.1rem !important; }
 }

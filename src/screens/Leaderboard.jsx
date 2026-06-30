@@ -129,7 +129,7 @@ const Leaderboard = ({ navigate, username, currentXp, backTo = 'dashboard' }) =>
               <X size={24} color="white" style={{ cursor: 'pointer' }} onClick={() => setIsModalOpen(false)} />
             </div>
 
-            <div style={{ display: 'flex', gap: '15px', marginBottom: '20px' }}>
+            <div className="flex-row mobile-col" style={{ gap: '15px', marginBottom: '20px' }}>
               <div style={{ background: 'rgba(0,240,255,0.1)', padding: '15px', borderRadius: '12px', flex: 1, border: '1px solid var(--secondary-color)' }}>
                 <div className="text-muted" style={{ fontSize: '0.9rem' }}>Nama</div>
                 <div className="font-bold" style={{ fontSize: '1.2rem', color: 'white' }}>{selectedUser.username}</div>

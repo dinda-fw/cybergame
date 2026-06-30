@@ -36,7 +36,7 @@ function App() {
   const [currentScreen, setCurrentScreen] = useState('dashboard');
   const [gameState, setGameState] = useState(DEFAULT_GAME_STATE);
   const [leaderboardBackTo, setLeaderboardBackTo] = useState('dashboard');
-  const [showUrlDetective, setShowUrlDetective] = useState(false);
+  const [urlDetectiveBackTo, setUrlDetectiveBackTo] = useState('dashboard');
 
   const saveProgressToBackend = async (stateToSave, usernameToSave) => {
     try {
@@ -200,7 +200,8 @@ function App() {
 
   const navigate = (screen, options = {}) => {
     if (screen === 'url_detective') {
-      setShowUrlDetective(true);
+      setUrlDetectiveBackTo(options.backTo || currentScreen);
+      setCurrentScreen('url_detective');
       return;
     }
 
@@ -322,6 +323,8 @@ function App() {
         return <ServerRoom navigate={navigate} completeMission={completeMission} addXP={addXP} recordMistake={recordMistake} username={currentUser} />;
       case 'cyber_scan':
         return <CyberScanChallenge navigate={navigate} addXP={addXP} />;
+      case 'url_detective':
+        return <UrlDetective navigate={navigate} backTo={urlDetectiveBackTo} />;
       case 'results':
         return <ResultsDashboard navigate={navigate} gameState={gameState} resetGame={resetGame} setLeaderboardBackTo={setLeaderboardBackTo} />;
       case 'leaderboard':
@@ -334,19 +337,6 @@ function App() {
   return (
     <div className="screen-container" style={{ position: 'relative' }}>
       {renderScreen()}
-      {showUrlDetective && (
-        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 999, background: 'var(--bg-dark)' }}>
-          <UrlDetective 
-            navigate={(dest) => {
-              setShowUrlDetective(false);
-              if (dest && dest !== currentScreen) {
-                setCurrentScreen(dest);
-              }
-            }} 
-            backTo={currentScreen} 
-          />
-        </div>
-      )}
     </div>
   );
 }

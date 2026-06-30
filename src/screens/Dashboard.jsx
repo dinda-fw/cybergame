@@ -38,7 +38,7 @@ const Dashboard = ({ navigate, gameState, onLogout, username, onReset, setLeader
         <div className="cyber-card mb-4 flex-column" style={{ position: 'relative', overflow: 'hidden', padding: 0 }}>
           <div style={{ position: 'relative', zIndex: 2, padding: '2rem' }}>
             <h2 className="text-glow" style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>Hallo {username}!</h2>
-            <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', maxWidth: '60%' }}>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', maxWidth: '100%' }}>
               Suatu hari di sekolah, terdapat beberapa kejadian dan kasus aneh terkait serangan siber dan phishing. Mulailah petualanganmu sekarang untuk mengungkap semua kasus tersebut, dan lakukan tindakan terbaik demi melindungi keamanan sekolah kita!
             </p>
             <button
@@ -79,7 +79,7 @@ const Dashboard = ({ navigate, gameState, onLogout, username, onReset, setLeader
           }} />
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginBottom: '24px' }}>
+        <div className="dashboard-grid">
           <div className="cyber-card flex-column flex-center animate-fade-in" onClick={() => navigate('cyber_scan')} style={{ cursor: 'pointer', padding: '10px' }}>
             <Shield size={28} color="var(--primary-color)" className="mb-1" />
             <span className="font-semibold" style={{ color: 'var(--primary-color)', fontSize: '0.85rem' }}>Cyber Challenge</span>
@@ -117,13 +117,15 @@ const Dashboard = ({ navigate, gameState, onLogout, username, onReset, setLeader
           style={{ cursor: 'pointer', transition: 'all 0.3s ease' }}
           onClick={() => setExpandedModule(expandedModule === 1 ? null : 1)}
         >
-          <div className="flex-row" style={{ alignItems: 'center' }}>
-            <div style={{ background: 'rgba(0, 240, 255, 0.1)', padding: '12px', borderRadius: '8px', marginRight: '16px' }}>
-              <Book size={24} color="var(--secondary-color)" />
-            </div>
-            <div style={{ flexGrow: 1 }}>
-              <div className="font-bold">Dasar Keamanan Siber</div>
-              <div className="text-muted" style={{ fontSize: '0.85rem' }}>Pahami konsep CIA Triad & pentingnya proteksi data</div>
+          <div className="flex-row space-between" style={{ alignItems: 'center' }}>
+            <div className="flex-row" style={{ alignItems: 'center', flexGrow: 1 }}>
+              <div style={{ background: 'rgba(0, 240, 255, 0.1)', padding: '12px', borderRadius: '8px', marginRight: '16px' }}>
+                <Book size={24} color="var(--secondary-color)" />
+              </div>
+              <div>
+                <div className="font-bold">Dasar Keamanan Siber</div>
+                <div className="text-muted" style={{ fontSize: '0.85rem' }}>Pahami konsep CIA Triad & pentingnya proteksi data</div>
+              </div>
             </div>
             <div style={{ transform: expandedModule === 1 ? 'rotate(180deg)' : 'rotate(0deg)', transition: '0.3s' }}>
               <ChevronDown size={20} />
@@ -154,13 +156,15 @@ const Dashboard = ({ navigate, gameState, onLogout, username, onReset, setLeader
           style={{ cursor: 'pointer', transition: 'all 0.3s ease' }}
           onClick={() => setExpandedModule(expandedModule === 2 ? null : 2)}
         >
-          <div className="flex-row" style={{ alignItems: 'center' }}>
-            <div style={{ background: 'rgba(136, 204, 20, 0.1)', padding: '12px', borderRadius: '8px', marginRight: '16px' }}>
-              <User size={24} color="var(--primary-color)" />
-            </div>
-            <div style={{ flexGrow: 1 }}>
-              <div className="font-bold">Ciri-Ciri Serangan Siber</div>
-              <div className="text-muted" style={{ fontSize: '0.85rem' }}>Kenali tanda-tanda bahaya dan penipuan di internet</div>
+          <div className="flex-row space-between" style={{ alignItems: 'center' }}>
+            <div className="flex-row" style={{ alignItems: 'center', flexGrow: 1 }}>
+              <div style={{ background: 'rgba(136, 204, 20, 0.1)', padding: '12px', borderRadius: '8px', marginRight: '16px' }}>
+                <User size={24} color="var(--primary-color)" />
+              </div>
+              <div>
+                <div className="font-bold">Ciri-Ciri Serangan Siber</div>
+                <div className="text-muted" style={{ fontSize: '0.85rem' }}>Kenali tanda-tanda bahaya dan penipuan di internet</div>
+              </div>
             </div>
             <div style={{ transform: expandedModule === 2 ? 'rotate(180deg)' : 'rotate(0deg)', transition: '0.3s' }}>
               <ChevronDown size={20} />
@@ -199,13 +203,15 @@ const Dashboard = ({ navigate, gameState, onLogout, username, onReset, setLeader
           style={{ cursor: 'pointer', transition: 'all 0.3s ease' }}
           onClick={() => setExpandedModule(expandedModule === 3 ? null : 3)}
         >
-          <div className="flex-row" style={{ alignItems: 'center' }}>
-            <div style={{ background: 'rgba(239, 68, 68, 0.1)', padding: '12px', borderRadius: '8px', marginRight: '16px' }}>
-              <ShieldAlert size={24} color="var(--danger-red)" />
-            </div>
-            <div style={{ flexGrow: 1 }}>
-              <div className="font-bold">Jenis-Jenis Serangan Siber</div>
-              <div className="text-muted" style={{ fontSize: '0.85rem' }}>Kenali metode serangan yang dihadapi dalam permainan ini</div>
+          <div className="flex-row space-between" style={{ alignItems: 'center' }}>
+            <div className="flex-row" style={{ alignItems: 'center', flexGrow: 1 }}>
+              <div style={{ background: 'rgba(239, 68, 68, 0.1)', padding: '12px', borderRadius: '8px', marginRight: '16px' }}>
+                <ShieldAlert size={24} color="var(--danger-red)" />
+              </div>
+              <div>
+                <div className="font-bold">Jenis-Jenis Serangan Siber</div>
+                <div className="text-muted" style={{ fontSize: '0.85rem' }}>Kenali metode serangan yang dihadapi dalam permainan ini</div>
+              </div>
             </div>
             <div style={{ transform: expandedModule === 3 ? 'rotate(180deg)' : 'rotate(0deg)', transition: '0.3s' }}>
               <ChevronDown size={20} />

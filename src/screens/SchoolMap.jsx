@@ -1203,10 +1203,11 @@ const SchoolMap = ({ navigate, gameState, username }) => {
             .startFollow(this._player, true, 0.08, 0.08)
             .setBounds(0, 0, WORLD_W, WORLD_H);
           // Lower zoom so player can see more of the 3200x2400 world at once
-          const zoom = Math.min(0.75, Math.max(0.4, Math.min(
+          // On mobile, force a minimum zoom of 0.6 to prevent tiny rendering
+          const zoom = Math.max(0.6, Math.min(0.75, Math.max(0.4, Math.min(
             this.scale.width / 1400,
             this.scale.height / 900
-          )));
+          ))));
           this.cameras.main.setZoom(zoom);
         }
 
@@ -1414,7 +1415,7 @@ const SchoolMap = ({ navigate, gameState, username }) => {
                   boxShadow: `0 0 32px ${nearby.cssColor}55, 0 4px 24px rgba(0,0,0,0.6)`,
                   color: 'white', cursor: 'pointer',
                   display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px',
-                  minWidth: '220px', WebkitTapHighlightColor: 'transparent',
+                  minWidth: '220px', maxWidth: '90vw', WebkitTapHighlightColor: 'transparent',
                 }}
                 onPointerDown={e => e.currentTarget.style.transform = 'scale(0.97)'}
                 onPointerUp={e => e.currentTarget.style.transform = 'scale(1)'}
