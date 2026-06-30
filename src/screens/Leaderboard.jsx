@@ -13,12 +13,14 @@ const Leaderboard = ({ navigate, username, currentXp, backTo = 'dashboard' }) =>
     const fetchLeaderboard = async () => {
       try {
         const res = await fetch(`${API_URL}/leaderboard`);
-        if (res.ok) {
-          const data = await res.json();
-          setLeaderboardData(data);
-        }
+        if (!res.ok) throw new Error('API failed');
+        const data = await res.json();
+        setLeaderboardData(data);
       } catch (e) {
-        console.error("Gagal mengambil data papan peringkat", e);
+        console.warn("Backend offline, generating leaderboard from localstorage");
+        const users = JSON.parse(localStorage.getItem('cybergame_users') || '{}');
+        const data = Object.values(users).sort((a, b) => (b.xp || 0) - (a.xp || 0));
+        setLeaderboardData(data);
       }
     };
     fetchLeaderboard();
@@ -27,13 +29,18 @@ const Leaderboard = ({ navigate, username, currentXp, backTo = 'dashboard' }) =>
   const handleUserClick = async (clickedUsername) => {
     try {
       const res = await fetch(`${API_URL}/user/${clickedUsername}`);
-      if (res.ok) {
-        const userDetail = await res.json();
-        setSelectedUser(userDetail);
+      if (!res.ok) throw new Error('API failed');
+      const userDetail = await res.json();
+      setSelectedUser(userDetail);
+      setIsModalOpen(true);
+    } catch (e) {
+      console.warn("Backend offline, getting user detail from localstorage");
+      const users = JSON.parse(localStorage.getItem('cybergame_users') || '{}');
+      const user = users[clickedUsername];
+      if (user) {
+        setSelectedUser(user);
         setIsModalOpen(true);
       }
-    } catch (e) {
-      console.error("Gagal mengambil detail user", e);
     }
   };
 

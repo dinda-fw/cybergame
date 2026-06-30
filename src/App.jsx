@@ -40,7 +40,7 @@ function App() {
 
   const saveProgressToBackend = async (stateToSave, usernameToSave) => {
     try {
-      await fetch(`${API_URL}/save-progress`, {
+      const res = await fetch(`${API_URL}/save-progress`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -48,8 +48,14 @@ function App() {
           ...stateToSave
         })
       });
+      if (!res.ok) throw new Error('API failed');
     } catch (e) {
-      console.error("Failed to save progress to backend", e);
+      console.warn("Backend unavailable, saving progress to localStorage");
+      const users = JSON.parse(localStorage.getItem('cybergame_users') || '{}');
+      if (users[usernameToSave]) {
+        users[usernameToSave] = { ...users[usernameToSave], ...stateToSave };
+        localStorage.setItem('cybergame_users', JSON.stringify(users));
+      }
     }
   };
 
@@ -65,27 +71,46 @@ function App() {
       if (savedUser) {
         try {
           const res = await fetch(`${API_URL}/user/${savedUser}`);
-          if (res.ok) {
-            const user = await res.json();
+          if (!res.ok) throw new Error('API failed');
+          const user = await res.json();
+          setCurrentUser(savedUser);
+          setGameState({
+            xp: user.xp,
+            level: user.level,
+            badges: user.badges,
+            currentLevel: user.currentLevel,
+            competencies: {
+              awareness: user.awareness,
+              urlDetection: user.urlDetection,
+              passwordSecurity: user.passwordSecurity,
+              socialEngineering: user.socialEngineering,
+              networkSecurity: user.networkSecurity
+            },
+            completedMissions: user.completedMissions || [],
+            mistakes: user.mistakes || []
+          });
+        } catch (e) {
+          console.warn("Backend offline, relying on localstorage");
+          const users = JSON.parse(localStorage.getItem('cybergame_users') || '{}');
+          const user = users[savedUser];
+          if (user) {
             setCurrentUser(savedUser);
             setGameState({
-              xp: user.xp,
-              level: user.level,
-              badges: user.badges,
-              currentLevel: user.currentLevel,
-              competencies: {
-                awareness: user.awareness,
-                urlDetection: user.urlDetection,
-                passwordSecurity: user.passwordSecurity,
-                socialEngineering: user.socialEngineering,
-                networkSecurity: user.networkSecurity
+              xp: user.xp || 0,
+              level: user.level || 'Cyber Rookie',
+              badges: user.badges || 3,
+              currentLevel: user.currentLevel || 1,
+              competencies: user.competencies || {
+                awareness: user.awareness || 0,
+                urlDetection: user.urlDetection || 0,
+                passwordSecurity: user.passwordSecurity || 0,
+                socialEngineering: user.socialEngineering || 0,
+                networkSecurity: user.networkSecurity || 0
               },
               completedMissions: user.completedMissions || [],
               mistakes: user.mistakes || []
             });
           }
-        } catch (e) {
-          console.error("Backend offline, relying on localstorage");
         }
       }
     };
@@ -99,37 +124,72 @@ function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, className })
       });
+      if (!res.ok) throw new Error('API failed');
       const data = await res.json();
       
-      if (res.ok) {
-        setCurrentUser(username);
-        localStorage.setItem('cyberShieldUser', username);
-        
-        const user = data.user;
-        const finalState = {
-          xp: user.xp,
-          level: user.level,
-          badges: user.badges,
-          currentLevel: user.currentLevel,
-          competencies: {
-            awareness: user.awareness,
-            urlDetection: user.urlDetection,
-            passwordSecurity: user.passwordSecurity,
-            socialEngineering: user.socialEngineering,
-            networkSecurity: user.networkSecurity
-          },
-          completedMissions: user.completedMissions || [],
-          mistakes: user.mistakes || []
-        };
-        
-        setGameState(finalState);
-        setCurrentScreen('dashboard');
-        return true;
-      }
+      setCurrentUser(username);
+      localStorage.setItem('cyberShieldUser', username);
+      
+      const user = data.user;
+      const finalState = {
+        xp: user.xp,
+        level: user.level,
+        badges: user.badges,
+        currentLevel: user.currentLevel,
+        competencies: {
+          awareness: user.awareness,
+          urlDetection: user.urlDetection,
+          passwordSecurity: user.passwordSecurity,
+          socialEngineering: user.socialEngineering,
+          networkSecurity: user.networkSecurity
+        },
+        completedMissions: user.completedMissions || [],
+        mistakes: user.mistakes || []
+      };
+      
+      setGameState(finalState);
+      setCurrentScreen('dashboard');
+      return true;
     } catch (e) {
-      alert("Gagal terhubung ke server database. Pastikan server berjalan (npm run dev).");
+      console.warn("Backend unavailable, using localStorage for login");
+      const users = JSON.parse(localStorage.getItem('cybergame_users') || '{}');
+      let user = users[username];
+      if (!user) {
+        user = {
+          username,
+          class_name: className,
+          xp: 0,
+          level: 'Cyber Rookie',
+          badges: 3,
+          currentLevel: 1,
+          competencies: { awareness: 0, urlDetection: 0, passwordSecurity: 0, socialEngineering: 0, networkSecurity: 0 },
+          completedMissions: [],
+          mistakes: []
+        };
+        users[username] = user;
+        localStorage.setItem('cybergame_users', JSON.stringify(users));
+      }
+      
+      setCurrentUser(username);
+      localStorage.setItem('cyberShieldUser', username);
+      setGameState({
+        xp: user.xp || 0,
+        level: user.level || 'Cyber Rookie',
+        badges: user.badges || 3,
+        currentLevel: user.currentLevel || 1,
+        competencies: user.competencies || {
+          awareness: user.awareness || 0,
+          urlDetection: user.urlDetection || 0,
+          passwordSecurity: user.passwordSecurity || 0,
+          socialEngineering: user.socialEngineering || 0,
+          networkSecurity: user.networkSecurity || 0
+        },
+        completedMissions: user.completedMissions || [],
+        mistakes: user.mistakes || []
+      });
+      setCurrentScreen('dashboard');
+      return true;
     }
-    return false;
   };
 
   const handleLogout = () => {
