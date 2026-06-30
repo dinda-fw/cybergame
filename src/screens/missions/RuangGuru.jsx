@@ -33,7 +33,7 @@ const deterministicShuffle = (username, items) => {
   return shuffled;
 };
 
-const RuangGuru = ({ navigate, completeMission, addXP, recordMistake, username }) => {
+const RuangGuru = ({ navigate, completeMission, addXP, recordMistake, username, gameState }) => {
   const [status, setStatus] = useState('playing'); // playing, correct, success, fail, timeUp
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -73,10 +73,10 @@ const RuangGuru = ({ navigate, completeMission, addXP, recordMistake, username }
       
       if (newWins >= 3) {
         setStatus('success');
-        completeMission('mission_ruangguru', 0);
+        completeMission('mission_ruangguru', 150);
       } else {
         setStatus('correct');
-        addXP(50);
+        addXP(20);
       }
     } else {
       if (isPhishingFlagged) {
@@ -109,9 +109,9 @@ const RuangGuru = ({ navigate, completeMission, addXP, recordMistake, username }
 
   return (
     <div className="flex-column h-full">
-      <Header title="Misi: Ruang Guru" showBack={true} onBack={() => navigate('schoolMap')} timeLeft={timeLeft} />
+      <Header title="Misi: Ruang Guru" showBack={true} onBack={() => navigate('schoolMap')} timeLeft={timeLeft} xp={gameState?.xp} level={gameState?.level} />
       
-      <div className="content-area flex-column" style={{ padding: '1rem', gap: '1rem' }}>
+      <div className="content-area flex-column" style={{ padding: '1rem', gap: '1rem', overflowY: 'auto' }}>
         <h3 className="font-bold text-center text-glow-neon">Misi: Detektif Kotak Masuk Email</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '-0.5rem', marginBottom: '0.5rem' }}>
           <div style={{ background: 'rgba(255, 165, 0, 0.1)', borderLeft: '3px solid #F59E0B', padding: '10px', borderRadius: '4px' }}>
@@ -169,11 +169,11 @@ const RuangGuru = ({ navigate, completeMission, addXP, recordMistake, username }
         </div>
 
         {status === 'playing' && (
-          <div className="flex-row space-between mt-4">
-            <button className="btn hover-glow" style={{ background: 'rgba(255,255,255,0.1)', color: 'var(--text-main)', border: '1px solid rgba(255,255,255,0.2)' }} onClick={() => handleChoice(true)}>
+          <div className="flex-row mobile-col space-between mt-4">
+            <button className="btn hover-glow mobile-w-full" style={{ background: 'rgba(255,255,255,0.1)', color: 'var(--text-main)', border: '1px solid rgba(255,255,255,0.2)' }} onClick={() => handleChoice(true)}>
               <ShieldAlert size={18} /> LAPORKAN PENIPUAN
             </button>
-            <button className="btn hover-glow" style={{ background: 'rgba(255,255,255,0.1)', color: 'var(--text-main)', border: '1px solid rgba(255,255,255,0.2)' }} onClick={() => handleChoice(false)}>
+            <button className="btn hover-glow mobile-w-full" style={{ background: 'rgba(255,255,255,0.1)', color: 'var(--text-main)', border: '1px solid rgba(255,255,255,0.2)' }} onClick={() => handleChoice(false)}>
               <CheckCircle size={18} /> EMAIL INI AMAN
             </button>
           </div>

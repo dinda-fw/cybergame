@@ -22,10 +22,11 @@ const deterministicShuffle = (username, items) => {
   return shuffled;
 };
 
-const ServerRoom = ({ navigate, completeMission, addXP, recordMistake, username }) => {
+const ServerRoom = ({ navigate, completeMission, addXP, recordMistake, username, gameState }) => {
   const [status, setStatus] = useState('playing'); // playing, checking, success, fail, timeUp
   const [urls, setUrls] = useState([]);
   const [timeLeft, setTimeLeft] = useState(180);
+  const [draggedId, setDraggedId] = useState(null);
 
   useEffect(() => {
     const shuffled = deterministicShuffle(username, questionBank.serverRoom).slice(0, 8);
@@ -63,6 +64,32 @@ const ServerRoom = ({ navigate, completeMission, addXP, recordMistake, username 
     setUrls(prev => prev.map(u => u.id === id ? { ...u, zone } : u));
   };
 
+  const handleTouchStart = (e, id) => {
+    if (status !== 'playing') return;
+    setDraggedId(id);
+    e.target.style.opacity = '0.5';
+  };
+
+  const handleTouchMove = (e) => {
+    if (status !== 'playing' || !draggedId) return;
+    e.preventDefault(); // prevent scrolling
+  };
+
+  const handleTouchEnd = (e, id) => {
+    if (status !== 'playing' || !draggedId) return;
+    e.target.style.opacity = '1';
+    
+    const touch = e.changedTouches[0];
+    const target = document.elementFromPoint(touch.clientX, touch.clientY);
+    const dropZone = target ? target.closest('[data-droppable]') : null;
+    
+    if (dropZone) {
+      const zone = dropZone.getAttribute('data-droppable');
+      setUrls(prev => prev.map(u => u.id === draggedId ? { ...u, zone } : u));
+    }
+    setDraggedId(null);
+  };
+
   const checkAnswers = () => {
     setStatus('checking');
     let correct = true;
@@ -80,11 +107,10 @@ const ServerRoom = ({ navigate, completeMission, addXP, recordMistake, username 
     setTimeout(() => {
       if (correct) {
         setStatus('success');
-        completeMission('mission_serverroom', 0);
+        completeMission('mission_serverroom', 150);
       } else {
         setStatus('fail');
-        addXP(-50);
-        completeMission('mission_serverroom', 0);
+        completeMission('mission_serverroom', -50);
         if (recordMistake) recordMistake("Misi: Server Room", "Gagal mengklasifikasikan URL yang aman dan berbahaya dengan tepat pada firewall. Beberapa URL phishing lolos ke jaringan sekolah.");
       }
     }, 1000);
@@ -106,7 +132,7 @@ const ServerRoom = ({ navigate, completeMission, addXP, recordMistake, username 
 
   return (
     <div className="flex-column h-full">
-      <Header title="Misi: Server Room" showBack={true} onBack={() => navigate('schoolMap')} timeLeft={timeLeft} />
+      <Header title="Misi: Server Room" showBack={true} onBack={() => navigate('schoolMap')} timeLeft={timeLeft} xp={gameState?.xp} level={gameState?.level} />
       
       <div className="content-area flex-column" style={{ padding: '0.5rem', gap: '0.5rem' }}>
         <h3 className="font-bold text-center mt-2 text-glow-neon">Misi: Penjaga Gerbang Server</h3>
@@ -122,6 +148,7 @@ const ServerRoom = ({ navigate, completeMission, addXP, recordMistake, username 
 
         {/* Unassigned URLs */}
         <div 
+          data-droppable="unassigned"
           style={{ minHeight: '60px', padding: '10px', background: '#e2e8f0', borderRadius: '12px', display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'center' }}
           onDragOver={handleDragOver}
           onDrop={(e) => handleDrop(e, 'unassigned')}
@@ -132,7 +159,10 @@ const ServerRoom = ({ navigate, completeMission, addXP, recordMistake, username 
               key={u.id}
               draggable={status === 'playing'}
               onDragStart={(e) => handleDragStart(e, u.id)}
-              style={{ padding: '6px 12px', background: 'white', color: '#0f172a', borderRadius: '20px', fontSize: '1.05rem', cursor: status === 'playing' ? 'grab' : 'default', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
+              onTouchStart={(e) => handleTouchStart(e, u.id)}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={(e) => handleTouchEnd(e, u.id)}
+              style={{ padding: '6px 12px', background: 'white', color: '#0f172a', borderRadius: '20px', fontSize: '1.05rem', cursor: status === 'playing' ? 'grab' : 'default', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', userSelect: 'none', touchAction: 'none' }}
             >
               {u.url}
             </div>
@@ -140,11 +170,12 @@ const ServerRoom = ({ navigate, completeMission, addXP, recordMistake, username 
         </div>
 
         {/* Drop Zones */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', flexGrow: 1, marginTop: '10px' }}>
+        <div className="mobile-col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', flexGrow: 1, marginTop: '10px' }}>
           
           {/* Safe Zone */}
           <div 
             className="flex-column cyber-card"
+            data-droppable="safe"
             style={{ padding: '10px', background: 'rgba(16, 185, 129, 0.1)', borderColor: '#86efac' }}
             onDragOver={handleDragOver}
             onDrop={(e) => handleDrop(e, 'safe')}
@@ -162,7 +193,7 @@ const ServerRoom = ({ navigate, completeMission, addXP, recordMistake, username 
                   textColor = u.type === 'danger' ? '#991b1b' : '#166534';
                 }
                 return (
-                  <div key={u.id} draggable={status === 'playing'} onDragStart={(e) => handleDragStart(e, u.id)} style={{ padding: '6px', background: bgColor, color: textColor, borderRadius: '8px', fontSize: '1rem', textAlign: 'center', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
+                  <div key={u.id} draggable={status === 'playing'} onDragStart={(e) => handleDragStart(e, u.id)} onTouchStart={(e) => handleTouchStart(e, u.id)} onTouchMove={handleTouchMove} onTouchEnd={(e) => handleTouchEnd(e, u.id)} style={{ padding: '6px', background: bgColor, color: textColor, borderRadius: '8px', fontSize: '1rem', textAlign: 'center', boxShadow: '0 1px 2px rgba(0,0,0,0.1)', userSelect: 'none', touchAction: 'none' }}>
                     {u.url}
                   </div>
                 );
@@ -173,6 +204,7 @@ const ServerRoom = ({ navigate, completeMission, addXP, recordMistake, username 
           {/* Danger Zone */}
           <div 
             className="flex-column cyber-card"
+            data-droppable="danger"
             style={{ padding: '10px', background: 'rgba(239, 68, 68, 0.1)', borderColor: '#fca5a5' }}
             onDragOver={handleDragOver}
             onDrop={(e) => handleDrop(e, 'danger')}
@@ -190,7 +222,7 @@ const ServerRoom = ({ navigate, completeMission, addXP, recordMistake, username 
                   textColor = u.type === 'danger' ? '#991b1b' : '#166534';
                 }
                 return (
-                  <div key={u.id} draggable={status === 'playing'} onDragStart={(e) => handleDragStart(e, u.id)} style={{ padding: '6px', background: bgColor, color: textColor, borderRadius: '8px', fontSize: '1rem', textAlign: 'center', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
+                  <div key={u.id} draggable={status === 'playing'} onDragStart={(e) => handleDragStart(e, u.id)} onTouchStart={(e) => handleTouchStart(e, u.id)} onTouchMove={handleTouchMove} onTouchEnd={(e) => handleTouchEnd(e, u.id)} style={{ padding: '6px', background: bgColor, color: textColor, borderRadius: '8px', fontSize: '1rem', textAlign: 'center', boxShadow: '0 1px 2px rgba(0,0,0,0.1)', userSelect: 'none', touchAction: 'none' }}>
                     {u.url}
                   </div>
                 );

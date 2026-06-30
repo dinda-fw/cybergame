@@ -22,7 +22,7 @@ const deterministicShuffle = (username, items) => {
   return shuffled;
 };
 
-const LabKomputer = ({ navigate, completeMission, addXP, recordMistake, username }) => {
+const LabKomputer = ({ navigate, completeMission, addXP, recordMistake, username, gameState }) => {
   const [status, setStatus] = useState('playing'); // playing, correct, success, fail, timeUp
   const [pcs, setPcs] = useState([]);
   const [selectedPCId, setSelectedPCId] = useState(null);
@@ -61,7 +61,7 @@ const LabKomputer = ({ navigate, completeMission, addXP, recordMistake, username
 
     if (isCorrect) {
       setStatus('correct');
-      addXP(50);
+      addXP(30);
     } else {
       setStatus('fail');
       addXP(-10); // slight penalty for wrong
@@ -75,13 +75,14 @@ const LabKomputer = ({ navigate, completeMission, addXP, recordMistake, username
   };
 
   const handleNext = () => {
-    if (processedPcs.length >= pcs.length) {
+    const newProcessed = [...processedPcs, { id: selectedPCId, isCorrect: pcs.find(p => p.id === selectedPCId).correctAction === 'dummy' }]; // Logic placeholder, real check handled in handleAction
+    if (processedPcs.length + 1 === pcs.length) {
       setStatus('success');
-      completeMission('mission_labkomputer', 0);
+      completeMission('mission_labkomputer', 150);
       return;
     }
     // Select the next unprocessed PC automatically
-    const nextUnprocessed = pcs.find(p => !processedPcs.some(proc => proc.id === p.id));
+    const nextUnprocessed = pcs.find(p => !processedPcs.some(proc => proc.id === p.id) && p.id !== selectedPCId);
     if (nextUnprocessed) {
       setSelectedPCId(nextUnprocessed.id);
     }
@@ -105,9 +106,9 @@ const LabKomputer = ({ navigate, completeMission, addXP, recordMistake, username
 
   return (
     <div className="flex-column h-full" style={{ background: '#080c14' }}>
-      <Header title="Misi: Penyelamat Lab Komputer" showBack={true} onBack={() => navigate('schoolMap')} timeLeft={timeLeft} />
+      <Header title="Investigasi Lab Komputer" showBack={true} onBack={() => navigate('schoolMap')} timeLeft={timeLeft} xp={gameState?.xp} level={gameState?.level} />
       
-      <div className="content-area flex-column" style={{ padding: '0.5rem', gap: '0.5rem', flexGrow: 1 }}>
+      <div className="content-area flex-column mobile-col" style={{ padding: '0.5rem', gap: '0.5rem', flexGrow: 1 }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '0.5rem' }}>
           <div style={{ background: 'rgba(255, 165, 0, 0.1)', borderLeft: '3px solid #F59E0B', padding: '10px', borderRadius: '4px' }}>
             <p style={{ margin: 0, fontSize: '1.1rem', lineHeight: '1.4' }}><span style={{fontWeight: 'bold', color: '#F59E0B'}}>Studi Kasus:</span> Lab Komputer sekolah sedang diserang oleh berbagai macam virus! Kamu harus bertindak sebagai detektif untuk memeriksa kelima komputer di lab ini satu per satu.</p>
@@ -143,10 +144,10 @@ const LabKomputer = ({ navigate, completeMission, addXP, recordMistake, username
           })}
         </div>
 
-        <div style={{ display: 'flex', gap: '10px', flexGrow: 1, height: '100%', overflow: 'hidden' }}>
+        <div className="flex-row mobile-col" style={{ gap: '10px', flexGrow: 1, minHeight: 0 }}>
           
           {/* Left Panel: PC List */}
-          <div style={{ width: '35%', background: 'rgba(11, 16, 30, 0.8)', border: '1px solid var(--border-blue)', borderRadius: '12px', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+          <div className="mobile-w-full" style={{ width: '35%', background: 'rgba(11, 16, 30, 0.8)', border: '1px solid var(--border-blue)', borderRadius: '12px', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
             <div style={{ padding: '10px', background: 'rgba(0, 240, 255, 0.1)', borderBottom: '1px solid var(--border-blue)', fontWeight: 'bold', fontSize: '1.1rem' }}>
               DAFTAR KOMPUTER
             </div>
@@ -190,7 +191,7 @@ const LabKomputer = ({ navigate, completeMission, addXP, recordMistake, username
           </div>
 
           {/* Right Panel: Telemetry Monitor */}
-          <div style={{ width: '65%', background: '#0a0f1a', border: '1px solid var(--border-blue)', borderRadius: '12px', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+          <div className="mobile-w-full" style={{ width: '65%', background: '#0a0f1a', border: '1px solid var(--border-blue)', borderRadius: '12px', display: 'flex', flexDirection: 'column', position: 'relative', overflowY: 'auto' }}>
             <div style={{ padding: '10px', background: 'rgba(0, 240, 255, 0.1)', borderBottom: '1px solid var(--border-blue)', fontWeight: 'bold', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Activity size={16} /> KONDISI MESIN
             </div>
@@ -267,7 +268,7 @@ const LabKomputer = ({ navigate, completeMission, addXP, recordMistake, username
                   <>
                     <ShieldCheck size={50} color="var(--primary-color)" />
                     <h3 style={{ color: 'var(--primary-color)', marginTop: '15px', textShadow: '0 0 10px rgba(0,240,255,0.5)' }}>SEMUA KOMPUTER DIPERIKSA!</h3>
-                    <p style={{ fontSize: '1.1rem', textAlign: 'center', margin: '10px 0' }}>Hore! Kamu berhasil memeriksa seluruh komputer di lab.</p>
+                    <p style={{ color: 'var(--success-green)', fontWeight: 'bold' }}>+150 XP</p>
                     <button className="btn cyber-btn mt-4" onClick={() => navigate('schoolMap')}>Kembali ke Peta</button>
                   </>
                 )}

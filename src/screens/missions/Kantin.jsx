@@ -3,7 +3,7 @@ import Header from '../../components/Header';
 import { Wifi, Shield, ShieldAlert, CheckCircle, AlertTriangle, Fingerprint, Lock, Unlock, Key, Activity, ServerCrash } from 'lucide-react';
 import { questionBank } from '../../data/questionBank';
 
-const Kantin = ({ navigate, completeMission, addXP, recordMistake }) => {
+const Kantin = ({ navigate, completeMission, addXP, recordMistake, gameState }) => {
   const [status, setStatus] = useState('playing'); // playing, checking, success, fail, timeUp, connecting
   const [currentIndex, setCurrentIndex] = useState(0);
     const [selectedNetworkId, setSelectedNetworkId] = useState(null);
@@ -54,12 +54,12 @@ const Kantin = ({ navigate, completeMission, addXP, recordMistake }) => {
         if (isCorrect) {
           if (currentIndex < questionBank.kantin.length - 1) {
             // Next scenario
-            addXP(50);
+            addXP(30);
             setStatus('correct');
           } else {
             // Finished all 3
             setStatus('success');
-            completeMission('mission_kantin', 0);
+            completeMission('mission_kantin', 150);
           }
         } else {
           if (scenario.correctAction.startsWith('report_')) {
@@ -81,11 +81,11 @@ const Kantin = ({ navigate, completeMission, addXP, recordMistake }) => {
       const isCorrect = (scenario.correctAction === `report_id_${selectedNetworkId}`); 
       if (isCorrect) {
         if (currentIndex < questionBank.kantin.length - 1) {
-          addXP(50);
+          addXP(30);
           setStatus('correct');
         } else {
           setStatus('success');
-          completeMission('mission_kantin', 0);
+          completeMission('mission_kantin', 150);
         }
       } else {
         if (scenario.correctAction.startsWith('connect_')) {
@@ -119,7 +119,7 @@ const Kantin = ({ navigate, completeMission, addXP, recordMistake }) => {
 
   return (
     <div className="flex-column h-full" style={{ background: '#080c14' }}>
-      <Header title="Wi-Fi Analyzer Simulator" showBack={true} onBack={() => navigate('schoolMap')} timeLeft={timeLeft} />
+      <Header title="Wi-Fi Analyzer Simulator" showBack={true} onBack={() => navigate('schoolMap')} timeLeft={timeLeft} xp={gameState?.xp} level={gameState?.level} />
       
       <div className="content-area flex-column" style={{ padding: '0.5rem', gap: '0.5rem', flexGrow: 1 }}>
         
@@ -134,10 +134,10 @@ const Kantin = ({ navigate, completeMission, addXP, recordMistake }) => {
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: '10px', flexGrow: 1, height: '100%', overflow: 'hidden' }}>
+        <div className="flex-row mobile-col" style={{ gap: '10px', flexGrow: 1, minHeight: 0 }}>
           
           {/* Left Panel: Network Scan List */}
-          <div style={{ width: '40%', background: 'rgba(11, 16, 30, 0.8)', border: '1px solid var(--border-blue)', borderRadius: '12px', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+          <div className="mobile-w-full" style={{ width: '40%', background: 'rgba(11, 16, 30, 0.8)', border: '1px solid var(--border-blue)', borderRadius: '12px', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
             <div style={{ padding: '10px', background: 'rgba(0, 240, 255, 0.1)', borderBottom: '1px solid var(--border-blue)', fontWeight: 'bold', fontSize: '1.05rem', display: 'flex', justifyContent: 'space-between' }}>
               <span>DAFTAR WI-FI</span>
               <span className="text-glow" style={{ fontSize: '1.2rem' }}>{scenario.networks.length} DITEMUKAN</span>
@@ -174,7 +174,7 @@ const Kantin = ({ navigate, completeMission, addXP, recordMistake }) => {
           </div>
 
           {/* Right Panel: Inspection Monitor Screen */}
-          <div style={{ width: '60%', background: '#0a0f1a', border: '1px solid var(--border-blue)', borderRadius: '12px', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+          <div className="mobile-w-full" style={{ width: '60%', background: '#0a0f1a', border: '1px solid var(--border-blue)', borderRadius: '12px', display: 'flex', flexDirection: 'column', position: 'relative', overflowY: 'auto' }}>
             <div style={{ padding: '10px', background: 'rgba(0, 240, 255, 0.1)', borderBottom: '1px solid var(--border-blue)', fontWeight: 'bold', fontSize: '1.05rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Activity size={16} /> LAYAR PEMERIKSAAN INFORMASI
             </div>

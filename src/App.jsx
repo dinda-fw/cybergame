@@ -253,6 +253,7 @@ function App() {
           competencies: newComps,
           completedMissions: [...prev.completedMissions, missionId],
           xp: newXp,
+          level: newXp > 2000 ? 'Cyber Defender' : prev.level,
           currentLevel: prev.currentLevel + 1
         };
         return newState;
@@ -311,16 +312,16 @@ function App() {
       case 'schoolMap':
         return <SchoolMap navigate={navigate} gameState={gameState} username={currentUser} />;
       case 'mission_ruangguru':
-        return <RuangGuru navigate={navigate} completeMission={completeMission} addXP={addXP} recordMistake={recordMistake} username={currentUser} />;
+        return <RuangGuru navigate={navigate} completeMission={completeMission} addXP={addXP} recordMistake={recordMistake} username={currentUser} gameState={gameState} />;
       case 'mission_labkomputer':
-        return <LabKomputer navigate={navigate} completeMission={completeMission} addXP={addXP} recordMistake={recordMistake} username={currentUser} />;
+        return <LabKomputer navigate={navigate} completeMission={completeMission} addXP={addXP} recordMistake={recordMistake} username={currentUser} gameState={gameState} />;
       case 'mission_kantin':
-        return <Kantin navigate={navigate} completeMission={completeMission} addXP={addXP} recordMistake={recordMistake} username={currentUser} />;
+        return <Kantin navigate={navigate} completeMission={completeMission} addXP={addXP} recordMistake={recordMistake} username={currentUser} gameState={gameState} />;
       case 'mission_aula':
-        return <Aula navigate={navigate} completeMission={completeMission} addXP={addXP} recordMistake={recordMistake} username={currentUser} />;
+        return <Aula navigate={navigate} completeMission={completeMission} addXP={addXP} recordMistake={recordMistake} username={currentUser} gameState={gameState} />;
       case 'serverroom': // just in case
       case 'mission_serverroom':
-        return <ServerRoom navigate={navigate} completeMission={completeMission} addXP={addXP} recordMistake={recordMistake} username={currentUser} />;
+        return <ServerRoom navigate={navigate} completeMission={completeMission} addXP={addXP} recordMistake={recordMistake} username={currentUser} gameState={gameState} />;
       case 'cyber_scan':
         return <CyberScanChallenge navigate={navigate} addXP={addXP} />;
       case 'url_detective':

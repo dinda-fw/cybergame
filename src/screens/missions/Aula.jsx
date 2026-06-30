@@ -30,7 +30,7 @@ const renderTextWithLinks = (text) => {
   });
 };
 
-const Aula = ({ navigate, completeMission, addXP, recordMistake, username }) => {
+const Aula = ({ navigate, completeMission, addXP, recordMistake, username, gameState }) => {
   const [status, setStatus] = useState('playing'); // playing, success, fail, timeUp
   const [scenario, setScenario] = useState(null);
   const [timeLeft, setTimeLeft] = useState(120);
@@ -64,11 +64,10 @@ const Aula = ({ navigate, completeMission, addXP, recordMistake, username }) => 
 
     if (isSafeFlagged) {
       setStatus('success');
-      completeMission('mission_aula', 0);
+      completeMission('mission_aula', 100);
     } else {
       setStatus('fail');
-      addXP(-50);
-      completeMission('mission_aula', 0);
+      completeMission('mission_aula', -50);
       if (recordMistake) recordMistake("Misi: Aula Sekolah", `Memilih respon yang salah pada insiden Social Engineering. ${scenario.explanation}`);
     }
   };
@@ -82,7 +81,7 @@ const Aula = ({ navigate, completeMission, addXP, recordMistake, username }) => 
 
   return (
     <div className="flex-column h-full">
-      <Header title="Misi: Aula Sekolah" showBack={true} onBack={() => navigate('schoolMap')} timeLeft={timeLeft} />
+      <Header title="Misi: Aula Sekolah" showBack={true} onBack={() => navigate('schoolMap')} timeLeft={timeLeft} xp={gameState?.xp} level={gameState?.level} />
       
       <div className="content-area flex-column" style={{ padding: '0.5rem', gap: '0.5rem' }}>
         <h3 className="font-bold text-center mt-2 text-glow-neon">Misi: Hindari Penipuan Pesan</h3>
@@ -95,7 +94,7 @@ const Aula = ({ navigate, completeMission, addXP, recordMistake, username }) => 
           </div>
         </div>
         
-        <div className="cyber-card flex-column" style={{ padding: 0, overflow: 'hidden', background: '#0b141a', flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+        <div className="cyber-card flex-column" style={{ padding: 0, background: '#0b141a', flexGrow: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
           {/* WhatsApp Header Mockup */}
           <div style={{ background: '#202c33', padding: '10px 15px', color: '#e9edef', display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div style={{ background: '#ccc', borderRadius: '50%', width: 40, height: 40, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -108,7 +107,7 @@ const Aula = ({ navigate, completeMission, addXP, recordMistake, username }) => 
           </div>
           
           {/* Chat Body */}
-          <div style={{ padding: '15px', flexGrow: 1, display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <div style={{ padding: '15px', flexGrow: 1, display: 'flex', flexDirection: 'column', gap: '10px', overflowY: 'auto' }}>
             <div style={{ alignSelf: 'flex-start', background: '#202c33', color: '#e9edef', padding: '10px 15px', borderRadius: '0 12px 12px 12px', maxWidth: '85%', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
               <p style={{ margin: 0, fontSize: '1.15rem' }}>{renderTextWithLinks(scenario.message)}</p>
             </div>
