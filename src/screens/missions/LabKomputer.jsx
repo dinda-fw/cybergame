@@ -296,7 +296,7 @@ const LabKomputer = ({ navigate, completeMission, addXP, recordMistake, username
         </div>
 
         {/* Action Footer */}
-        <div style={{ display: 'flex', gap: '10px', marginTop: 'auto' }}>
+        <div className="mobile-col" style={{ display: 'flex', gap: '10px', marginTop: 'auto' }}>
           <button 
             disabled={status !== 'playing'}
             className="btn hover-glow" 

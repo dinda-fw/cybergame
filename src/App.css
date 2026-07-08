@@ -202,6 +202,8 @@
 @media (max-width: 768px) {
   .mobile-col {
     flex-direction: column !important;
+    grid-template-columns: 1fr !important;
+    height: auto !important;
   }
   
   .dashboard-grid {
@@ -210,6 +212,9 @@
   
   .mobile-w-full {
     width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow-y: visible !important;
   }
   
   .content-area {

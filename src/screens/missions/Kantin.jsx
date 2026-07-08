@@ -274,7 +274,7 @@ const Kantin = ({ navigate, completeMission, addXP, recordMistake, gameState }) 
         </div>
 
         {/* Action Footer */}
-        <div style={{ display: 'flex', gap: '10px', marginTop: 'auto' }}>
+        <div className="mobile-col" style={{ display: 'flex', gap: '10px', marginTop: 'auto' }}>
           <button 
             disabled={status !== 'playing' || !selectedNetworkId}
             className="btn hover-glow" 
