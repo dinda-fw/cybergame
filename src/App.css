@@ -226,10 +226,7 @@
     border-bottom-right-radius: 16px;
   }
   
-  * {
-    font-size: 15px;
+  html {
+    font-size: 14px;
   }
-  
-  h2 { font-size: 1.3rem !important; }
-  h3 { font-size: 1.1rem !important; }
 }
