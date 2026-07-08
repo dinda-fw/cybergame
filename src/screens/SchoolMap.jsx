@@ -374,7 +374,7 @@ const SchoolMap = ({ navigate, gameState, username }) => {
 
           // ── Directional signs ──
           [
-            [WORLD_W / 2 + 200, 1000, '→ Ruang Guru & Server Room →'],
+            [WORLD_W / 2 + 200, 1000, '→ Ruang Guru & Server →'],
             [WORLD_W / 2 - 200, 1000, '← Aula & Kantin ←'],
             [WORLD_W / 2, WORLD_H - 320, '▼ Gerbang Sekolah'],
             [WORLD_W / 2, 500, '▲ Lab Komputer'],
