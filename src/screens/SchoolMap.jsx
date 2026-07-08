@@ -374,18 +374,18 @@ const SchoolMap = ({ navigate, gameState, username }) => {
 
           // ── Directional signs ──
           [
-            [WORLD_W / 2 + 200, 1000, '→ Lab & Server Room →', '#1e3a8a'],
-            [WORLD_W / 2 - 200, 1000, '← Ruang Guru & Kantin ←', '#7c2d12'],
-            [WORLD_W / 2, WORLD_H - 320, '▼ Gerbang Sekolah', '#dc2626'],
-            [WORLD_W / 2, 500, '▲ Ruang Guru', '#4c1d95'],
-          ].forEach(([x, y, txt, col]) => {
+            [WORLD_W / 2 + 200, 1000, '→ Ruang Guru & Server Room →'],
+            [WORLD_W / 2 - 200, 1000, '← Aula & Kantin ←'],
+            [WORLD_W / 2, WORLD_H - 320, '▼ Gerbang Sekolah'],
+            [WORLD_W / 2, 500, '▲ Lab Komputer'],
+          ].forEach(([x, y, txt]) => {
             const sg = this.add.graphics().setDepth(4);
-            sg.fillStyle(0xfef9c3, 0.95).fillRoundedRect(-80, -26, 160, 52, 8);
-            sg.lineStyle(2, 0xca8a04).strokeRoundedRect(-80, -26, 160, 52, 8);
+            sg.fillStyle(0x15803d, 0.95).fillRoundedRect(-80, -26, 160, 52, 8);
+            sg.lineStyle(2, 0x14532d).strokeRoundedRect(-80, -26, 160, 52, 8);
             sg.x = x; sg.y = y;
             this.add.text(x, y, txt, {
-              fontSize: '12px', fontFamily: '"Inter", sans-serif',
-              fontStyle: 'bold', color: col, align: 'center'
+              fontSize: '15px', fontFamily: '"Inter", sans-serif',
+              fontStyle: 'bold', color: '#ffffff', align: 'center'
             }).setOrigin(0.5).setDepth(5);
           });
 
