@@ -166,6 +166,7 @@
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
   padding-top: env(safe-area-inset-top);
+  overflow: hidden; /* CRITICAL: Prevent entire screen from blowing out, forces content-area to scroll */
 }
 
 .content-area {
@@ -276,6 +277,50 @@
     .require-landscape .screen-content-wrapper {
       display: none !important;
     }
+  }
+}
+
+/* Because we force width=1100 on mobile landscape, the height becomes very short. 
+   We need to scale down the fonts so that things fit better, and ensure margins are smaller */
+@media (max-height: 650px) {
+  html {
+    font-size: 12px !important;
+  }
+  
+  .app-header.custom-header {
+    padding: 8px 16px !important;
+    gap: 8px !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .app-header.custom-header h2 {
+    font-size: 1rem !important;
+  }
+  
+  /* Shrink header icons */
+  .header-shield-icon {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  
+  .header-shield-icon svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+  
+  /* Make cards pad less */
+  .cyber-card {
+    padding: 1rem !important;
+  }
+  
+  /* Make all text slightly tighter */
+  p {
+    margin-bottom: 0.5rem !important;
+    line-height: 1.4 !important;
+  }
+  
+  .content-area {
+    padding: 0.5rem !important;
   }
 }
 

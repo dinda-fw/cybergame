@@ -363,7 +363,7 @@ function App() {
           </p>
         </div>
       )}
-      <div className="screen-content-wrapper" style={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }}>
+      <div className="screen-content-wrapper" style={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden', minHeight: 0 }}>
         {renderScreen()}
       </div>
     </div>
