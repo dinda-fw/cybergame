@@ -275,3 +275,78 @@
     display: none;
   }
 }
+
+/* Landscape Mobile Optimizations */
+@media (max-height: 500px) and (orientation: landscape) {
+  /* Scale down the base font size slightly */
+  html {
+    font-size: 13px;
+  }
+
+  /* Compact Header */
+  .app-header.custom-header {
+    padding: 6px 12px !important;
+    gap: 6px !important;
+    min-height: auto !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .app-header.custom-header h2 {
+    font-size: 1rem !important;
+  }
+  
+  .header-xp-text .text-glow-neon {
+    font-size: 0.85rem !important;
+  }
+  
+  .header-xp-text .text-muted {
+    font-size: 0.65rem !important;
+  }
+  
+  .header-shield-icon {
+    width: 28px !important;
+    height: 28px !important;
+  }
+  
+  .header-shield-icon svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+  
+  .header-timer {
+    padding: 2px 8px !important;
+  }
+  
+  .header-timer span {
+    font-size: 0.85rem !important;
+  }
+  
+  .header-timer svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  /* Compact Content Area */
+  .content-area {
+    padding: 0.5rem !important;
+  }
+
+  /* Compact Cards/Dialogs */
+  .cyber-card {
+    padding: 0.75rem !important;
+  }
+  
+  /* Make study case and task text smaller */
+  .studi-kasus-text, 
+  .tugas-text,
+  p {
+    margin-bottom: 0.5rem !important;
+    line-height: 1.4 !important;
+  }
+  
+  /* Compact Buttons */
+  .btn {
+    padding: 8px 16px !important;
+    font-size: 0.9rem !important;
+  }
+}

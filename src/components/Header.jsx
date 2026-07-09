@@ -8,7 +8,7 @@ const Header = ({ title, showBack, onBack, xp, level, actions, timeLeft }) => {
     return `${m}:${s}`;
   };
   return (
-    <div className="app-header" style={{ 
+    <div className="app-header custom-header" style={{ 
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -41,17 +41,17 @@ const Header = ({ title, showBack, onBack, xp, level, actions, timeLeft }) => {
         )}
         {xp !== undefined && (
           <div className="flex-row" style={{ gap: '16px', alignItems: 'center' }}>
-            <div className="text-right" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+            <div className="text-right header-xp-text" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
               <div className="font-bold text-glow-neon" style={{ fontSize: '0.9rem' }}>XP: {xp}</div>
               <div className="text-muted" style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px' }}>{level}</div>
             </div>
-            <div style={{ width: 40, height: 40, borderRadius: '4px', backgroundColor: 'rgba(136, 204, 20, 0.2)', border: '1px solid var(--primary-color)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <div className="header-shield-icon" style={{ width: 40, height: 40, borderRadius: '4px', backgroundColor: 'rgba(136, 204, 20, 0.2)', border: '1px solid var(--primary-color)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <Shield size={20} color="var(--primary-color)" />
             </div>
           </div>
         )}
         {timeLeft !== undefined && (
-          <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '6px', background: timeLeft <= 10 ? 'rgba(239, 68, 68, 0.2)' : 'rgba(0,0,0,0.4)', border: timeLeft <= 10 ? '1px solid #ef4444' : '1px solid var(--border-blue)', padding: '4px 10px', borderRadius: '8px' }}>
+          <div className="header-timer" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '6px', background: timeLeft <= 10 ? 'rgba(239, 68, 68, 0.2)' : 'rgba(0,0,0,0.4)', border: timeLeft <= 10 ? '1px solid #ef4444' : '1px solid var(--border-blue)', padding: '4px 10px', borderRadius: '8px' }}>
             <Clock size={18} color={timeLeft <= 10 ? '#ef4444' : 'var(--text-main)'} className={timeLeft <= 10 ? 'animate-pulse' : ''} />
             <span className="font-bold" style={{ color: timeLeft <= 10 ? '#ef4444' : 'var(--text-main)', fontSize: '1rem', letterSpacing: '1px' }}>
               {formatTime(timeLeft)}
