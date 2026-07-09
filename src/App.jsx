@@ -337,6 +337,21 @@ function App() {
 
   const needsLandscape = !['login', 'dashboard', 'leaderboard', 'results'].includes(currentScreen);
 
+  useEffect(() => {
+    const metaViewport = document.querySelector('meta[name=viewport]');
+    const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+    
+    if (metaViewport) {
+      if (needsLandscape && isMobile) {
+        // Force desktop width on mobile to trigger native zoom out
+        metaViewport.setAttribute('content', 'width=1100, viewport-fit=cover');
+      } else {
+        // Normal responsive width for dashboard/login or desktop
+        metaViewport.setAttribute('content', 'width=device-width, initial-scale=1.0, viewport-fit=cover');
+      }
+    }
+  }, [needsLandscape]);
+
   return (
     <div className={`screen-container ${needsLandscape ? 'require-landscape' : ''}`} style={{ position: 'relative' }}>
       {needsLandscape && (
