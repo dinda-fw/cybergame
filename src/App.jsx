@@ -335,9 +335,22 @@ function App() {
     }
   };
 
+  const needsLandscape = !['login', 'dashboard', 'leaderboard', 'results'].includes(currentScreen);
+
   return (
-    <div className="screen-container" style={{ position: 'relative' }}>
-      {renderScreen()}
+    <div className={`screen-container ${needsLandscape ? 'require-landscape' : ''}`} style={{ position: 'relative' }}>
+      {needsLandscape && (
+        <div className="landscape-overlay">
+          <div className="landscape-overlay-icon">📱</div>
+          <h2 className="text-glow-neon" style={{marginTop: '20px', marginBottom: '10px'}}>Putar Perangkat Anda</h2>
+          <p style={{fontSize: '1.1rem', maxWidth: '400px', lineHeight: '1.5'}}>
+            Misi ini wajib dimainkan dalam mode Lanskap (Layar Miring) agar tampilan tidak berantakan dan pengalaman bermain maksimal.
+          </p>
+        </div>
+      )}
+      <div className="screen-content-wrapper" style={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }}>
+        {renderScreen()}
+      </div>
     </div>
   );
 }

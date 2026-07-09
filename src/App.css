@@ -235,3 +235,43 @@
     font-size: 14px;
   }
 }
+
+/* Landscape Overlay */
+.landscape-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #050b14;
+  z-index: 9999;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+  padding: 2rem;
+}
+
+.landscape-overlay-icon {
+  font-size: 5rem;
+  margin-bottom: 1rem;
+  animation: rotatePhone 2s infinite ease-in-out;
+  color: var(--primary-color, #88cc14);
+}
+
+@keyframes rotatePhone {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(-90deg); }
+  100% { transform: rotate(-90deg); }
+}
+
+@media (max-width: 900px) and (orientation: portrait) {
+  .require-landscape .landscape-overlay {
+    display: flex;
+  }
+  .require-landscape .screen-content-wrapper {
+    display: none;
+  }
+}
