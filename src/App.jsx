@@ -306,7 +306,9 @@ function App() {
       return <Login onLogin={handleLogin} />;
     }
 
-    switch (currentScreen) {
+    const screenToRender = currentScreen === 'url_detective' ? urlDetectiveBackTo : currentScreen;
+
+    switch (screenToRender) {
       case 'dashboard':
         return <Dashboard navigate={navigate} gameState={gameState} onLogout={handleLogout} username={currentUser} onReset={resetGame} setLeaderboardBackTo={setLeaderboardBackTo} />;
       case 'schoolMap':
@@ -324,8 +326,6 @@ function App() {
         return <ServerRoom navigate={navigate} completeMission={completeMission} addXP={addXP} recordMistake={recordMistake} username={currentUser} gameState={gameState} />;
       case 'cyber_scan':
         return <CyberScanChallenge navigate={navigate} addXP={addXP} />;
-      case 'url_detective':
-        return <UrlDetective navigate={navigate} backTo={urlDetectiveBackTo} />;
       case 'results':
         return <ResultsDashboard navigate={navigate} gameState={gameState} resetGame={resetGame} setLeaderboardBackTo={setLeaderboardBackTo} />;
       case 'leaderboard':
@@ -363,9 +363,14 @@ function App() {
           </p>
         </div>
       )}
-      <div className="screen-content-wrapper" style={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden', minHeight: 0 }}>
+      <div className="screen-content-wrapper" style={{ display: currentScreen === 'url_detective' ? 'none' : 'flex', flex: 1, width: '100%', flexDirection: 'column', overflow: 'hidden', minHeight: 0 }}>
         {renderScreen()}
       </div>
+      {currentScreen === 'url_detective' && (
+        <div className="screen-content-wrapper" style={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden', minHeight: 0 }}>
+          <UrlDetective navigate={navigate} backTo={urlDetectiveBackTo} />
+        </div>
+      )}
     </div>
   );
 }
