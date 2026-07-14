@@ -159,21 +159,20 @@
 .screen-container {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
   width: 100%;
   background-color: var(--bg-color);
   padding-bottom: env(safe-area-inset-bottom);
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
   padding-top: env(safe-area-inset-top);
-  overflow: hidden; /* CRITICAL: Prevent entire screen from blowing out, forces content-area to scroll */
 }
 
 .content-area {
   flex-grow: 1;
   padding: 1rem;
-  overflow-y: auto;
-  min-height: 0; /* CRITICAL: Allows flex child to scroll */
+  overflow: visible;
 }
 
 /* Progress bar */

@@ -363,11 +363,11 @@ function App() {
           </p>
         </div>
       )}
-      <div className="screen-content-wrapper" style={{ display: currentScreen === 'url_detective' ? 'none' : 'flex', flex: 1, width: '100%', flexDirection: 'column', overflow: 'hidden', minHeight: 0 }}>
+      <div className="screen-content-wrapper" style={{ display: currentScreen === 'url_detective' ? 'none' : 'flex', flex: 1, width: '100%', flexDirection: 'column' }}>
         {renderScreen()}
       </div>
       {currentScreen === 'url_detective' && (
-        <div className="screen-content-wrapper" style={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden', minHeight: 0 }}>
+        <div className="screen-content-wrapper" style={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column' }}>
           <UrlDetective navigate={navigate} backTo={urlDetectiveBackTo} />
         </div>
       )}

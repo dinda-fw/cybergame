@@ -52,15 +52,16 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100dvh; /* Changed from 100vh */
+  min-height: 100dvh; 
   margin: 0;
-  overflow: hidden; /* Prevent body scroll, let app handle it */
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Responsive full screen wrapper with Cyberpunk Grid */
 #root {
   width: 100%;
-  height: 100dvh; /* Dynamic viewport height for mobile */
+  min-height: 100dvh; 
   background-color: var(--bg-color);
   background-image: 
     linear-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 1px),
