@@ -57,13 +57,13 @@ const LabKomputer = ({ navigate, completeMission, addXP, recordMistake, username
     if (!selectedPC) return;
 
     const isCorrect = selectedPC.correctAction === actionType;
-    setProcessedPcs(prev => [...prev, { id: selectedPCId, isCorrect }]);
+    const newProcessed = [...processedPcs, { id: selectedPCId, isCorrect }];
+    setProcessedPcs(newProcessed);
 
     if (isCorrect) {
       setStatus('correct');
       addXP(30);
     } else {
-      setStatus('fail');
       addXP(-10); // slight penalty for wrong
       if (recordMistake) {
         let expectedActionText = 'KOMPUTER AMAN';
@@ -71,18 +71,30 @@ const LabKomputer = ({ navigate, completeMission, addXP, recordMistake, username
         if (selectedPC.correctAction === 'scan') expectedActionText = 'SCAN ANTIVIRUS';
         recordMistake("Misi: Lab Komputer", `Salah mengambil tindakan pada ${selectedPC.name}. Seharusnya: ${expectedActionText}. ${selectedPC.explanation || ''}`);
       }
+      
+      // Langsung lanjut ke komputer selanjutnya jika salah
+      if (newProcessed.length === pcs.length) {
+        setStatus('success');
+        completeMission('mission_labkomputer', 150);
+      } else {
+        const nextUnprocessed = pcs.find(p => !newProcessed.some(proc => proc.id === p.id));
+        if (nextUnprocessed) {
+          setSelectedPCId(nextUnprocessed.id);
+        }
+        setTimeLeft(120);
+        setStatus('playing');
+      }
     }
   };
 
   const handleNext = () => {
-    const newProcessed = [...processedPcs, { id: selectedPCId, isCorrect: pcs.find(p => p.id === selectedPCId).correctAction === 'dummy' }]; // Logic placeholder, real check handled in handleAction
-    if (processedPcs.length + 1 === pcs.length) {
+    if (processedPcs.length === pcs.length) {
       setStatus('success');
       completeMission('mission_labkomputer', 150);
       return;
     }
     // Select the next unprocessed PC automatically
-    const nextUnprocessed = pcs.find(p => !processedPcs.some(proc => proc.id === p.id) && p.id !== selectedPCId);
+    const nextUnprocessed = pcs.find(p => !processedPcs.some(proc => proc.id === p.id));
     if (nextUnprocessed) {
       setSelectedPCId(nextUnprocessed.id);
     }
@@ -272,15 +284,7 @@ const LabKomputer = ({ navigate, completeMission, addXP, recordMistake, username
                     <button className="btn cyber-btn mt-4" onClick={() => navigate('schoolMap')}>Kembali ke Peta</button>
                   </>
                 )}
-                {status === 'fail' && (
-                  <>
-                    <ShieldAlert size={50} color="var(--danger-red)" />
-                    <h3 style={{ color: 'var(--danger-red)', marginTop: '15px' }}>YAH, TINDAKANMU SALAH!</h3>
-                    <p style={{ fontSize: '1.1rem', textAlign: 'center', margin: '10px 0' }}>Tindakanmu kurang tepat untuk komputer ini.</p>
-                    <p style={{ fontSize: '1rem', textAlign: 'center', color: 'var(--text-muted)' }}>{selectedPC?.explanation}</p>
-                    <button className="btn cyber-btn mt-4" onClick={handleNext}>{isLastPc ? 'Selesaikan Misi' : 'Lanjut ke Komputer Berikutnya'}</button>
-                  </>
-                )}
+
                 {status === 'timeUp' && (
                   <>
                     <AlertTriangle size={50} color="var(--warning-yellow)" />
