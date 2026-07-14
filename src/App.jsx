@@ -335,6 +335,8 @@ function App() {
     }
   };
 
+  const activeScreen = currentScreen === 'url_detective' ? urlDetectiveBackTo : currentScreen;
+  const isMap = activeScreen === 'schoolMap';
   const needsLandscape = !['login', 'dashboard', 'leaderboard', 'results'].includes(currentScreen);
 
   useEffect(() => {
@@ -353,7 +355,7 @@ function App() {
   }, [needsLandscape]);
 
   return (
-    <div className={`screen-container ${needsLandscape ? 'require-landscape' : ''}`} style={{ position: 'relative' }}>
+    <div className={`screen-container ${needsLandscape ? 'require-landscape' : ''}`} style={{ position: 'relative', height: isMap ? '100dvh' : 'auto', overflow: isMap ? 'hidden' : 'visible' }}>
       {needsLandscape && (
         <div className="landscape-overlay">
           <div className="landscape-overlay-icon">📱</div>
@@ -363,11 +365,11 @@ function App() {
           </p>
         </div>
       )}
-      <div className="screen-content-wrapper" style={{ display: currentScreen === 'url_detective' ? 'none' : 'flex', flex: 1, width: '100%', flexDirection: 'column' }}>
+      <div className="screen-content-wrapper" style={{ display: currentScreen === 'url_detective' ? 'none' : 'flex', flex: 1, width: '100%', flexDirection: 'column', overflow: isMap ? 'hidden' : 'visible', minHeight: 0 }}>
         {renderScreen()}
       </div>
       {currentScreen === 'url_detective' && (
-        <div className="screen-content-wrapper" style={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column' }}>
+        <div className="screen-content-wrapper" style={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden', minHeight: 0 }}>
           <UrlDetective navigate={navigate} backTo={urlDetectiveBackTo} />
         </div>
       )}
